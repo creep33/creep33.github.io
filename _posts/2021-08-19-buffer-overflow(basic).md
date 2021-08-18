@@ -28,10 +28,12 @@ Explicacion del BoF del OSCP tomando como modelo la maquina "Buff" de HTB
 
 <center><img src="/assets/images/buffer-overflow(basic)/winPEAS.png"></center>
 
-* Analizamos los binarios y buscamos que permisos tiene nuestro usuario (shaun) sobre estos binarios, vemos que tiene "AllAccess" lo que nos llama la atencion y decidimos investigar sonbre ese binario
+* Analizamos los binarios y buscamos que permisos tiene nuestro usuario (shaun) sobre estos binarios, vemos que tiene "AllAccess" lo que nos llama la atencion y decidimos investigar sobre ese binario
   * En este caso "CloudMe_1112.exe" es bulnerable a BoF
 
 ## Port Forwarding
+
+_Primero realizamos las pruebas en la maquina local windows y luego ya ejecutamos el exploit final contra la maquina_
 
 * En este caso el puerto que utiliza es interno (8888) asi que utilizaremos la heramienta **chisel** para hacer Port Forwarding del puerto 8888
   * <span style="color:red">*Atacante:*</span>
