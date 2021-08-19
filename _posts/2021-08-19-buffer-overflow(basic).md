@@ -244,6 +244,7 @@ if __name__ == "__main__":
 ```
 
 * En Immunity Debugger, gracias a mona podemos comprobar si hay algun BadChar.
+
   `!mona compare -f C:\Users\%USERNAME%\Desktop\CloudMe\bytearray.txt -a <direccion donde empieza el ESP>`
 
   Ej:
