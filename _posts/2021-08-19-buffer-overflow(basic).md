@@ -78,7 +78,7 @@ Al ejecutar el script vemos que hemos provocado un DOS al CloudMe.
 * Analizamos que sucede con Immunity Debugger en nuestra maquina windows 7 x86 local
 
   * Reiniciamos el CloudMe e iniciamos el Immunity Debbuger con el Mona instalado
-  * Nos vinculamos al servicio -->1File/attach/CloudMe 
+  * Nos vinculamos al servicio --> File/attach/CloudMe 
   
 _NOTA: Siempre que nos vinculamos se pausa automaticamente, hay que darle a PLAY_
 
