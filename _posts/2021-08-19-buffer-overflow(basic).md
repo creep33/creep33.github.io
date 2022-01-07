@@ -1,21 +1,21 @@
 ---
 layout: single
 title: BufferOverFlow (Basic)
-excerpt: "He decidido crearme una pagina para ir publicando todo lo que voy aprendiendo y asi si le es util a alguien mas, puede utilizar el contenido, tambien hare writeups de vez en cuando no tanto con el objetivo de enseñar como resolver dicha maquina sino para repasar como la hize, pero lo dicho que si a alguien le es util, ahi esta."
+excerpt: "He decidido crearme una página para ir publicando todo lo que voy aprendiendo y así si le es útil a alguien más, puede utilizar el contenido, también haré writeups de vez en cuando no tanto con el objetivo de enseñar cómo resolver dicha máquina sino para repasar como la hize, pero lo dicho que si a alguien le es útil, ahí está."
 date: 2021-08-19
 classes: wide
 header:
-  #teaser: /assets/images/htb-writeup-delivery/delivery_logo.png
-  #teaser_home_page: true
-  #icon: /assets/images/hackthebox.webp
+  teaser: /assets/images/Concepts/buffer-overflow(basic)/Buff-stack_explanation.png
+  teaser_home_page: true
+  icon: /assets/images/concept.png
 categories:
-  - Leaning
-tags:  
+  - Concepts
+tags:
   - BoF
   - Port Forwarding
 ---
 
-Explicacion del BoF del OSCP tomando como modelo la maquina "Buff" de HTB
+# Explicacion del BoF del OSCP tomando como modelo la maquina "Buff" de HTB
 
 ## Requirements
 * Windows 7 x86 (VM)
@@ -26,20 +26,16 @@ Explicacion del BoF del OSCP tomando como modelo la maquina "Buff" de HTB
 * WinPEAS.exe
 * En el apartado:
 
-<center><img src="/assets/images/buffer-overflow(basic)/winPEAS.png"></center>
+<center><img src="https://raw.githubusercontent.com/creep33/creep33.github.io/master/assets/images/buffer-overflow(basic)/winPEAS.png"></center>
 
 * Analizamos los binarios y buscamos que permisos tiene nuestro usuario (shaun) sobre estos binarios, vemos que tiene "AllAccess" lo que nos llama la atencion y decidimos investigar sobre ese binario
   * En este caso "CloudMe_1112.exe" es bulnerable a BoF
 
-## Port Forwarding
-
 _Primero realizamos las pruebas en la maquina local windows y luego ya ejecutamos el exploit final contra la maquina_
 
-* En este caso el puerto que utiliza es interno (8888) asi que utilizaremos la heramienta **chisel** para hacer Port Forwarding del puerto 8888
-  * <span style="color:red">*Atacante:*</span>
-    * chisel server --reverse --port 1234
-  * <span style="color:#7cb9e8">*Victima:*</span>
-    * chisel client \<ip del atacante\>:1234 R:8888:127.0.0.1:8888
+## Port Forwarding
+
+* Para este propósito utilizaremos la herramienta [[Chisel]].
 
 ## Reconocimiento de vulnerabilidad BoF
 
@@ -472,9 +468,6 @@ if __name__ == "__main__":
 
 ```
 
-### Desplazamiento de la pila
-
-<span style="color:red">*Work In Progress*</span>
 
 ## Comandos utiles:
 Linux:
