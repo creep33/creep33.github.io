@@ -26,7 +26,7 @@ tags:
 * WinPEAS.exe
 * En el apartado:
 
-<center><img src="https://raw.githubusercontent.com/creep33/creep33.github.io/master/assets/images/buffer-overflow(basic)/winPEAS.png"></center>
+<center><img src="/assets/images/Concepts/buffer-overflow(basic)/winPEAS.png"></center>
 
 * Analizamos los binarios y buscamos que permisos tiene nuestro usuario (shaun) sobre estos binarios, vemos que tiene "AllAccess" lo que nos llama la atencion y decidimos investigar sobre ese binario
   * En este caso "CloudMe_1112.exe" es bulnerable a BoF
@@ -35,7 +35,7 @@ _Primero realizamos las pruebas en la maquina local windows y luego ya ejecutamo
 
 ## Port Forwarding
 
-* Para este propósito utilizaremos la herramienta [[Chisel]].
+* Para este propósito utilizaremos la herramienta [Chisel](/Chisel/).
 
 ## Reconocimiento de vulnerabilidad BoF
 

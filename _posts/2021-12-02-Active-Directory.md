@@ -22,13 +22,13 @@ Un **Active Directory** o directorio activo, es un conjunto de usuarios controla
 
 | Vector | Herramienta |
 | --------- | ------------ |
-| [[ASREPRoast]] | [GetNPUsers.py](ASREPRoast.md#GetNPUsers.py), [[getTGT.py]] |
+| [ASREPRoast](/ASREPRoast/) | [GetNPUsers.py](ASREPRoast.md#GetNPUsers.py), [[getTGT.py]] |
 | [[Kerberoasting]] | [GetUserSPNs.py](Kerberoasting.md#GetUserSPN.py) |
 | Golden Ticket | GoldenPac.py |
 | [[Silver Ticket]] | [getST.py](Silver%20Ticket.md#getST.py) | 
 | [[ldap]] | [ldapsearch](ldap.md#ldapsearch), [ldapdomaindump](ldap.md#ldapdomaindump), go-windapsearch, gMSADumper|
-| [[SMB]] | [[crackmapexec]], [smbmap](SMB.md#smbmap), [smbclient](SMB.md#smbclient), [psexec.py](SMB.md#psexec.py) |
-| [[winrm]] | [[crackmapexec]], [evil-winrm](winrm.md#Evil-winrm) |
+| [[SMB]] | [crackmapexec](/Crackmapexec/), [smbmap](SMB.md#smbmap), [smbclient](SMB.md#smbclient), [psexec.py](SMB.md#psexec.py) |
+| [[winrm]] | [crackmapexec](/Crackmapexec/), [evil-winrm](winrm.md#Evil-winrm) |
 | [[rpc]] | [rpcclient](rpc.md#rpcclient), [rpcenum](rpc.md#rpcenum) |
 | [[Kerberos]] | [kerbrute](Kerberos.md#kerbrute), [pyKerbrute](Kerberos.md#pyKerbrute) |  
 | [[Bloodhound]] | [SharpHound.ps1](Bloodhound.md#Sharphound.ps1), [bloodhound-python](Bloodhound.md#bloodhound-python)  |
