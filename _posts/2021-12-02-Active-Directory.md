@@ -23,7 +23,7 @@ Un **Active Directory** o directorio activo, es un conjunto de usuarios controla
 | Vector | Herramienta |
 | --------- | ------------ |
 | [ASREPRoast](/ASREPRoast/) | [GetNPUsers.py](ASREPRoast.md#GetNPUsers.py), [[getTGT.py]] |
-| [[Kerberoasting]] | [GetUserSPNs.py](Kerberoasting.md#GetUserSPN.py) |
+| [Kerberoasting](/Kerberoasting/) | [GetUserSPNs.py](Kerberoasting.md#GetUserSPN.py) |
 | Golden Ticket | GoldenPac.py |
 | [[Silver Ticket]] | [getST.py](Silver%20Ticket.md#getST.py) | 
 | [[ldap]] | [ldapsearch](ldap.md#ldapsearch), [ldapdomaindump](ldap.md#ldapdomaindump), go-windapsearch, gMSADumper|
