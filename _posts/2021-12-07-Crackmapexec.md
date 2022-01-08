@@ -52,7 +52,7 @@ Esta herramienta por defecto para si encuentra un match válido, para que contin
 
 # Post-pwned
 ## Dumpear información
-Con crackmapexec podemos dumpear la SAM, LSA o NTDS. Ver diferentes tipos de [[Almacenamiento de credenciales]]
+Con crackmapexec podemos dumpear la SAM, LSA o NTDS. Ver diferentes tipos de [Almacenamiento de credenciales](/Almacenamiento-de-credenciales/).
 ### Workstation (sam)
 #### Sin privilegios
 

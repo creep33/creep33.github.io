@@ -27,13 +27,13 @@ Un **Active Directory** o directorio activo, es un conjunto de usuarios controla
 | Golden Ticket | GoldenPac.py |
 | [Silver Ticket](/Silver-Ticket/) | [getST.py](/Silver-Ticket/) | 
 | [[ldap]] | [ldapsearch](ldap.md#ldapsearch), [ldapdomaindump](ldap.md#ldapdomaindump), go-windapsearch, gMSADumper|
-| [[SMB]] | [crackmapexec](/Crackmapexec/), [smbmap](SMB.md#smbmap), [smbclient](SMB.md#smbclient), [psexec.py](SMB.md#psexec.py) |
+| [SMB](/SMB/) | [crackmapexec](/Crackmapexec/), [smbmap](/SMB/), [smbclient](/SMB/), [psexec.py](/SMB/) |
 | [[winrm]] | [crackmapexec](/Crackmapexec/), [evil-winrm](winrm.md#Evil-winrm) |
 | [[rpc]] | [rpcclient](rpc.md#rpcclient), [rpcenum](rpc.md#rpcenum) |
-| [[Kerberos]] | [kerbrute](Kerberos.md#kerbrute), [pyKerbrute](Kerberos.md#pyKerbrute) |  
+| [Kerberos](/Kerberos/) | [kerbrute](/Kerberos/), [pyKerbrute](/Kerberos/) |  
 | [Bloodhound](/Bloodhound/) | [SharpHound.ps1](/Bloodhound/), [bloodhound-python](/Bloodhound/)  |
 | [groups.xml](/gpp-decrypt/) | [gpp-decrypt](/gpp-decrypt/)
-| [[Almacenamiento de credenciales]] | [[secretsdump.py]], [reg.py](/reg.py/) |
+| [Almacenamiento de credenciales](/Almacenamiento-de-credenciales/) | [[secretsdump.py]], [reg.py](/reg.py/) |
 
 ## Sincronizar hora para prevenir errores.
 > Para realizar alguno de estos ataques tenemos que sincronizar la hora con la del DC.
