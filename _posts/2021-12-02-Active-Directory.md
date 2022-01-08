@@ -26,14 +26,14 @@ Un **Active Directory** o directorio activo, es un conjunto de usuarios controla
 | [Kerberoasting](/Kerberoasting/) | [GetUserSPNs.py](/Kerberoasting/) |
 | Golden Ticket | GoldenPac.py |
 | [Silver Ticket](/Silver-Ticket/) | [getST.py](/Silver-Ticket/) | 
-| [[ldap]] | [ldapsearch](ldap.md#ldapsearch), [ldapdomaindump](ldap.md#ldapdomaindump), go-windapsearch, gMSADumper|
+| [ldap](/ldap/) | [ldapsearch](/ldap/), [ldapdomaindump](/ldap/), go-windapsearch, gMSADumper|
 | [SMB](/SMB/) | [crackmapexec](/Crackmapexec/), [smbmap](/SMB/), [smbclient](/SMB/), [psexec.py](/SMB/) |
-| [[winrm]] | [crackmapexec](/Crackmapexec/), [evil-winrm](winrm.md#Evil-winrm) |
-| [[rpc]] | [rpcclient](rpc.md#rpcclient), [rpcenum](rpc.md#rpcenum) |
+| [winrm](/winrm/) | [crackmapexec](/Crackmapexec/), [evil-winrm](/winrm/) |
+| [rpc](/rpc/) | [rpcclient](/rpc/), [rpcenum](/rpc/) |
 | [Kerberos](/Kerberos/) | [kerbrute](/Kerberos/), [pyKerbrute](/Kerberos/) |  
 | [Bloodhound](/Bloodhound/) | [SharpHound.ps1](/Bloodhound/), [bloodhound-python](/Bloodhound/)  |
 | [groups.xml](/gpp-decrypt/) | [gpp-decrypt](/gpp-decrypt/)
-| [Almacenamiento de credenciales](/Almacenamiento-de-credenciales/) | [[secretsdump.py]], [reg.py](/reg.py/) |
+| [Almacenamiento de credenciales](/Almacenamiento-de-credenciales/) | [secretsdump.py](/secretsdump.py/), [reg.py](/reg.py/) |
 
 ## Sincronizar hora para prevenir errores.
 > Para realizar alguno de estos ataques tenemos que sincronizar la hora con la del DC.
