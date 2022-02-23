@@ -42,10 +42,15 @@ A continuación se presentan algunos archivos relevantes que deben considerarse 
 
 ### Comandos de shell: 
 • ~/.bash_history 
+
 • ~/.sh_history 
+
 • ~/.history Comando less: 
+
 • ~/.lesshst Clientes de FTP: 
+
 • ~/.lftp/rl_history y cwd_history 
+
 • ~/.ncftp/history 
 
 ### Equipos a los que se ha conectado con SSH: 
@@ -53,6 +58,7 @@ A continuación se presentan algunos archivos relevantes que deben considerarse 
 
 ### Logs del servidor de aplicación 
 • apache/logs/ 
+
 • etc/httpd/logs/
 
 ## Windows
