@@ -102,7 +102,7 @@ While all of these tools will mangle words, Crunch is a bit different because it
 
 ## Pipe John rules to aircrack-ng
 ```bash
-john --wordlist=/usr/share/john/password.lst --ruls --stdout | aircrack-ng -e wifu -w - wpa-02.cap
+john --wordlist=/usr/share/john/password.lst --rules --stdout | aircrack-ng -e wifu -w - wpa-02.cap
 ```
 
 ## Aircrack-ng with CRUNCH
