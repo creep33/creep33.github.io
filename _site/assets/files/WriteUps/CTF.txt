@@ -1,0 +1,24 @@
+# Nmap 7.92 scan initiated Mon Dec 13 20:29:32 2021 as: nmap -p- --open -n -vvv -sS --min-rate 5000 -sCV -Pn -oN CTF_nmap.txt 10.10.10.122
+Nmap scan report for 10.10.10.122
+Host is up, received user-set (0.072s latency).
+Scanned at 2021-12-13 20:29:32 CET for 38s
+Not shown: 65501 filtered tcp ports (no-response), 32 filtered tcp ports (host-prohibited)
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT   STATE SERVICE REASON         VERSION
+22/tcp open  ssh     syn-ack ttl 63 OpenSSH 7.4 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 fd:ad:f7:cb:dc:42:1e:43:7d:b3:d5:8b:ce:63:b9:0e (RSA)
+| ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAsZc86GU/EL8sQR7G68FEBQh1iNs+jKkM4SQCJk2HJrEMxdXnYbtxVqDjmOdtPHApyv21mLRV3AaIPTcAp2cq2ran4FlNaBABjHNTHhKluHqzTPo9UReRs5hhgJghJEXyhdrt9QaJeDy7thcAI1Xt8Ig7FDHP6hyaCPjmziO18bJTFDZLP5nlgPW9i7hsX9Ivdi2G/tmQdKT95PXa/M0df21MpqiVHH9P5XFZUgFTsDG5L9kgDHSBLyIRT+W9FSdTNXKy5tfzt8hR7g3fGUaqGf7QlWbhMUGmZyfbdbgHTlRVuOldBkJqHDsjCapc0W23Ud3+1QR1c1sfeq1uTTaR
+|   256 3d:ef:34:5c:e5:17:5e:06:d7:a4:c8:86:ca:e2:df:fb (ECDSA)
+| ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBK6dC3FyS4B3qiIFvkRkMxjuyfooYXRob25AqoUd5s+FAYInaC3fO4qW8ypSwFX8Iz9k8O4AJdiiSjYaIHN6oVg=
+|   256 4c:46:e2:16:8a:14:f6:f0:aa:39:6c:97:46:db:b4:40 (ED25519)
+|_ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDLD2IuW71iI2hEkQ2SIAG68fxDx9kwRR+XHt70dkXHW
+80/tcp open  http    syn-ack ttl 63 Apache httpd 2.4.6 ((CentOS) OpenSSL/1.0.2k-fips mod_fcgid/2.3.9 PHP/5.4.16)
+| http-methods: 
+|   Supported Methods: OPTIONS GET HEAD POST TRACE
+|_  Potentially risky methods: TRACE
+|_http-title: CTF
+
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Mon Dec 13 20:30:10 2021 -- 1 IP address (1 host up) scanned in 37.80 seconds

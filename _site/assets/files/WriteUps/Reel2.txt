@@ -1,0 +1,38 @@
+# Nmap 7.92 scan initiated Wed Dec 15 23:31:26 2021 as: nmap -sCV -p80,443,5985,6001,6002,6004,6005,6006,6007,6008,6010,6011,6012,6016,6022,8080 -oN Reel2_nmap.txt 10.10.10.210
+Nmap scan report for 10.10.10.210
+Host is up (0.043s latency).
+
+PORT     STATE SERVICE    VERSION
+80/tcp   open  http       Microsoft IIS httpd 8.5
+|_http-title: 403 - Forbidden: Access is denied.
+443/tcp  open  ssl/https?
+| ssl-cert: Subject: commonName=Reel2
+| Subject Alternative Name: DNS:Reel2, DNS:Reel2.htb.local
+| Not valid before: 2020-07-30T10:12:46
+|_Not valid after:  2025-07-30T10:12:46
+5985/tcp open  http       Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+6001/tcp open  ncacn_http Microsoft Windows RPC over HTTP 1.0
+6002/tcp open  ncacn_http Microsoft Windows RPC over HTTP 1.0
+6004/tcp open  ncacn_http Microsoft Windows RPC over HTTP 1.0
+6005/tcp open  msrpc      Microsoft Windows RPC
+6006/tcp open  msrpc      Microsoft Windows RPC
+6007/tcp open  msrpc      Microsoft Windows RPC
+6008/tcp open  msrpc      Microsoft Windows RPC
+6010/tcp open  ncacn_http Microsoft Windows RPC over HTTP 1.0
+6011/tcp open  msrpc      Microsoft Windows RPC
+6012/tcp open  msrpc      Microsoft Windows RPC
+6016/tcp open  msrpc      Microsoft Windows RPC
+6022/tcp open  msrpc      Microsoft Windows RPC
+8080/tcp open  http       Apache httpd 2.4.43 ((Win64) OpenSSL/1.1.1g PHP/7.2.32)
+|_http-title: Welcome | Wallstant
+| http-cookie-flags: 
+|   /: 
+|     PHPSESSID: 
+|_      httponly flag not set
+| http-open-proxy: Potentially OPEN proxy.
+|_Methods supported:CONNECTION
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Wed Dec 15 23:33:56 2021 -- 1 IP address (1 host up) scanned in 149.85 seconds

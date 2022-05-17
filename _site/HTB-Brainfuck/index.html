@@ -1,0 +1,591 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.15.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HTB-Brainfuck - creep33.github.io</title>
+<meta name="description" content="WriteUp con metodología de la máquina Brainfuck.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="creep33.github.io">
+<meta property="og:title" content="HTB-Brainfuck">
+<meta property="og:url" content="http://localhost:4000/HTB-Brainfuck/">
+
+
+  <meta property="og:description" content="WriteUp con metodología de la máquina Brainfuck.">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/WriteUps/Brainfuck.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2021-12-14T00:00:00+01:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/HTB-Brainfuck/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "creep33",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="creep33.github.io Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE ]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/masthead.png" alt=""></a>
+                
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+    
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        <li class="current">HTB-Brainfuck</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/avatar.png" alt="creep33" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">creep33</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Cibersecurity and<br>Ethical Hacking Student
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Spain</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/creep33" itemprop="sameAs" rel="nofollow noopener noreferrer">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HTB-Brainfuck">
+    <meta itemprop="description" content="WriteUp con metodología de la máquina Brainfuck.">
+    <meta itemprop="datePublished" content="December 14, 2021">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">HTB-Brainfuck
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="page__meta">
+          
+            <i class="fa fa-fw fa-calendar" aria-hidden="true"></i> <time datetime="2021-12-14T00:00:00+01:00">December 14, 2021 </time>&emsp;
+          
+          
+        </p>
+        <center><img src="/assets/images/WriteUps/Brainfuck.png" /></center>
+
+<p>IP -&gt; 10.10.10.17</p>
+<h1 id="reconocimiento">Reconocimiento</h1>
+<h2 id="nmap">Nmap</h2>
+<p>Utilizamos <a href="/Nmap/">nmap</a> y obtenemos los siguientes resultados.
+<a href="/assets/files/WriteUps/Brainfuck.txt">Brainfuck Nmap Result</a></p>
+
+<blockquote>
+  <p>Subdominios</p>
+</blockquote>
+
+<h2 id="https">https</h2>
+<p>Añadimos los subdominios encontrados al archivo /etc/hosts. Y sospechamos de posible <strong>Virtual Hosting</strong>.
+Abrimos la páigna y encontramos un correo.</p>
+<blockquote>
+  <p>MAIL: orestis\@brainfuck.htb
+DNS: www.brainfuck.htb sup3rs3cr3t.brainfuck.htb</p>
+</blockquote>
+
+<p>Para realizar un pequeño descubrimiento de rutas, utilizamos el script de <a href="/Nmap/">nmap</a> <strong>http-enum</strong>.</p>
+
+<p>El wappalizer nos indica que es un <strong>wordpress</strong>.
+Probamos rutas por defecto.</p>
+<blockquote>
+  <p>wp-login.php</p>
+</blockquote>
+
+<p>Y enumeramos usuarios en el panel de inicio de sesión.</p>
+<blockquote>
+  <p>USUARIOS: admin administrator</p>
+</blockquote>
+
+<p>Vemos que en la página tenemos la capacidad de abrir tickets. Como hemos visto que es un <strong>wordpress</strong> pensamos en que posiblemente se esté utilizando un plugin para gestionarlo.</p>
+
+<blockquote>
+  <p>Wordpress Ticket Plugin</p>
+</blockquote>
+
+<h3 id="wordpress">wordpress</h3>
+<p>Tratamos de enumerar los plugins.</p>
+
+<h4 id="wpscan">wpscan</h4>
+<p>Podemos hacerlo con la herramienta automatizada [wpscan]((/wordpress/)</p>
+<blockquote>
+  <p>Plugins:</p>
+  <ul>
+    <li>wp-support-plus-responsive-ticket-system. Ademas nos indica que la versión está desactualizada.</li>
+  </ul>
+</blockquote>
+
+<h4 id="fuzzing-manual">FUZZING manual</h4>
+<p>Aunque tambien podemos enumerar plugins [manualmente]((/wordpress/)</p>
+<blockquote>
+  <p>wp-support-plus-responsive-ticket-system</p>
+</blockquote>
+
+<h4 id="directory-listing">Directory Listing</h4>
+<p>En este caso particular tenemos capacidad de lectura bajo la ruta wp-content/plugins/ asi que podemos ver los plugins directamente.</p>
+<blockquote>
+  <p>wp-support-plus-responsive-ticket-system</p>
+</blockquote>
+
+<h4 id="análisis-del-plugin">Análisis del plugin</h4>
+<p>Buscamos vulnerabilidades en <strong>searchsploit</strong> para el plugin.
+Vemos que es vulnerable a <strong>SQLi</strong>. Para hacer la inyección tenemos que montarnos previamente un servicio en local.</p>
+
+<blockquote>
+  <p>index.html</p>
+</blockquote>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"https://brainfuck.htb/wp-admin/admin-ajax.php"</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"action"</span> <span class="na">value=</span><span class="s">"wpsp_getCatName"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"cat_id"</span> <span class="na">value=</span><span class="s">"0 UNION SELECT 1, CONCAT(name, CHAR(58), slug),3 FROM wp_terms WHERE term_id-1"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;input</span> <span class="na">type</span><span class="err">%="</span><span class="na">submit</span><span class="err">"</span> <span class="na">name=</span><span class="s">""</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</code></pre></div></div>
+
+<p>Con el servicio <strong>Apache</strong> analizamos los campos que aparecen. Probamos con admin y administrator. Pero no parece funcionar.
+Volvemos a buscar en <strong>searchploit</strong> y vemos otro exploit relacionado con <strong>Privilege Escalation</strong>. Analizamos este segundo script y vemos que podemos iniciar session como un usuario sin conocer la contraseña. Para ello tenemos que montarnos otro servicio y después acceder panel de inicio de session de la página.</p>
+
+<h4 id="explotación">Explotación</h4>
+
+<blockquote>
+  <p>index.html</p>
+</blockquote>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">"post"</span> <span class="na">action=</span><span class="s">"https://brainfuck.htb/wp-admin/admin-ajax.php"</span><span class="nt">&gt;</span>
+        Username: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">value=</span><span class="s">"administrator"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type-</span><span class="err">"</span><span class="na">hidden</span><span class="err">"</span> <span class="na">name=</span><span class="s">"email"</span> <span class="na">value-</span><span class="err">"</span><span class="na">sth</span><span class="err">"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"action"</span> <span class="na">value=</span><span class="s">"loginGuestFacebook"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Login"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</code></pre></div></div>
+
+<p>Probamos el exploit con el usuario <strong>administrator</strong> y el usuario <strong>admin</strong>, vamos al panel de inicio de sesion en wp-admin y estamos dentro.</p>
+
+<p>Probamos la intrusión clásica en vase a los [Themes]((/wordpress/)</p>
+
+<p>Vemos los plugins que están instalados, destaca <strong>Easy WP SMTP</strong>. Al entrar en settings del plugin, conseguimos informacion:</p>
+
+<blockquote>
+  <p>USER: orestis
+PASS: KHGUERB29DNINE
+MAIL: orestis\@brainfuck.htb</p>
+</blockquote>
+
+<h2 id="ssh">ssh</h2>
+<p>Intentamos conectarnos por <strong>ssh</strong> con la credenciales obtenidas. Pero no funcionan.</p>
+
+<h2 id="pop3">pop3</h2>
+<p>Nos conectamos con netcat al servicio <a href="/pop3/">pop3</a> para autenticarnos.</p>
+
+<p>Vemos que hablando de un usuario <strong>admin</strong> y una <strong>contraseña</strong> elegida durante la instalación.</p>
+
+<p>Y unas credenciales para un “foro secreto”.</p>
+<blockquote>
+  <p>User: orestis
+Pass: kIEnnfEKJ#9Umd0</p>
+</blockquote>
+
+<h2 id="https-1">https</h2>
+<p>Nos conectamos al dns que encontramos en <a href="/Nmap/">nmap</a> sup3rs3cr3t.brainfuck.htb.
+Iniciamos sesion como <strong>orestis</strong>. Vemos que hay mensajes medio cifrados, probablemente <strong>rot13</strong>. Hablan de una <strong>clave ssh</strong>, lo cual es interesante.</p>
+
+<p>Probamos a decodificarlo en <strong>rot13</strong> con <a href="https://quipqiup.com/">quipquip</a>. Pero no nos da ningun resultado destacable. Parece que es un cifrado más avanzado como el <strong>vigenere</strong>.</p>
+
+<p>En otros mensajes que no están cifrados, vemos que el usuario <strong>orestis</strong> firma los mensajes. Si tenemos un <strong>texto cifrado</strong> y un <strong>texto en claro</strong>.</p>
+
+<p>Buscamos en internet un <strong>vigenere online</strong>. Utilizamos el texo cifrado para cifrar y ponemos el texto claro como clave, para conseguir la clave original.</p>
+
+<blockquote>
+  <p>key: fuckmybrain</p>
+</blockquote>
+
+<p>Encontramos una id_rsa</p>
+<blockquote>
+  <p>id_rsa</p>
+</blockquote>
+
+<h2 id="ssh-1">ssh</h2>
+<p>Pero la key está protegida con contraseña. ssh2john.py + john y listo</p>
+
+<h3 id="ssh2john--john">ssh2john + john</h3>
+<blockquote>
+  <p>PASS: 3poulakia!</p>
+</blockquote>
+
+<blockquote>
+  <p>user.txt</p>
+</blockquote>
+
+<h1 id="privilege-escalation">Privilege escalation</h1>
+<p>Hay dos formas para escalar privilegios.</p>
+<ul>
+  <li>Grupo lxd &gt; <a href="/lxd_exploit.sh/">lxd_exploit.sh</a></li>
+  <li>Jugar con los archivos del escritorio.</li>
+</ul>
+
+<p>Vemos un archivo que almacena la contraseña en otro archivo codificándola con RSA, pero vemos otro archivo debug y sospechamos que los 2 primeros números primos son los números p y q.
+Utilizamos la <a href="https://www.cryptool.org/en/cto/rsa-step-by-step">página</a> para descifrar textos <a href="/RSA/">RSA</a>. La flag está en decimal, con python, la pasamos a hexadecimal, le quitamos el ‘0x’ y la decodificamos de hexadecimal (().decode(“hex”)). Y conseguimos la flag de root</p>
+
+<blockquote>
+  <p>root.txt</p>
+</blockquote>
+
+<hr />
+
+<p>Escrito el 14-12-2021 a las 07:19 pm por creep33.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#htb" class="page__taxonomy-item" rel="tag">HTB</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#writeups" class="page__taxonomy-item" rel="tag">WriteUps</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-12-14T00:00:00+01:00">December 14, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/HTB-Lame/" class="pagination--pager" title="HTB-Lame
+">Previous</a>
+    
+    
+      <a href="/Wordpress/" class="pagination--pager" title="Wordpress
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 creep33</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

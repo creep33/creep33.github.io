@@ -1,0 +1,35 @@
+# Nmap 7.92 scan initiated Mon Dec 27 12:48:34 2021 as: nmap -p- --open -vvv -sS --min-rate 5000 -n -Pn -sCV -oN Static_nmap.txt 10.10.10.246
+Nmap scan report for 10.10.10.246
+Host is up, received user-set (0.040s latency).
+Scanned at 2021-12-27 12:48:34 CET for 53s
+Not shown: 65532 filtered tcp ports (no-response)
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT     STATE SERVICE REASON         VERSION
+22/tcp   open  ssh     syn-ack ttl 63 OpenSSH 7.9p1 Debian 10+deb10u2 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 16:bb:a0:a1:20:b7:82:4d:d2:9f:35:52:f4:2e:6c:90 (RSA)
+| ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCyM3ZYCZb4Brnei3KsMgp18Z1bj/LergclItE15gBjvpKqrol6BwKJoXexCMpUT+THzjpvRtKZKandJhGAqqUg+6nWzucemV1mk8X2LNvCIGdjErJSR5xBoGnXBA7zukgcZpsM4w/WU2X3SoGlyf6oSMJUa8C/wfOIYk+HRudgrC7Z91zXTOyznUTZf/J00xXCgHXNcIWNthocAkCcE8MdYbmLU1qe0UZu/nwBgFApA6KeQAx5h4Ud91lDNq0EOF0wkbXZUuDMCMyiL8UCp4UYwLCBGYCfgYQXHqJq/GcPefRbUs/XEE2CXSebhVsyHhtvRRBUiNZszks9enCUFGB
+|   256 ca:ad:63:8f:30:ee:66:b1:37:9d:c5:eb:4d:44:d9:2b (ECDSA)
+| ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNf6FprVNh/Yi39D1fB5G7C/WiaREa9qZMAwv2jRhAz71cYsIwuBxUitj+0TjPTSG/r7+bdEEsAQmkgTxkPfrjU=
+|   256 2d:43:bc:4e:b3:33:c9:82:4e:de:b6:5e:10:ca:a7:c5 (ED25519)
+|_ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnml/gfiZRSzXbYCQkMsc1H84hQjJTvcB3soJtwaJNM
+2222/tcp open  ssh     syn-ack ttl 62 OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 a9:a4:5c:e3:a9:05:54:b1:1c:ae:1b:b7:61:ac:76:d6 (RSA)
+| ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFhedw/OTRm1/n5R5PpuH9+jPs5j81N7nsTUaje8g0HxCOuIDij/+O+xmAYRpDV60ADB8/Ioe0wULEWnheVojyNRsYe0XuAmhRlUDducqHI3Xyo+KuSI/tYj5CSR4g8zNnWp9YRmlxXOOu2TXHx483eXdeL750hFTkYulGyK9HrU0N8N8YWQH4texZ7gxGAYUGGBoakcVfSDBzvld9qgEs137ZSdtI4D7Em183Y12dmUZo74uNEHgJmeDKYUnWChwNeaW7Zl5yTyPEi9J3sIqsqjuHGo7apLwpyd0I1EWmhSnCyrNq5U8BPV677DBWw5EF2XiP+JRHOBcoNq5eO9nf
+|   256 c9:58:53:93:b3:90:9e:a0:08:aa:48:be:5e:c4:0a:94 (ECDSA)
+| ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNVf3s2ZPSKXQraO42ZjobZnZzMTskFcq4+3sPsNNCzUg0bBlRd5OLa0BKg5x6p3Xn8L+t66j1aL07A9ARtfqPw=
+|   256 c7:07:2b:07:43:4f:ab:c8:da:57:7f:ea:b5:50:21:bd (ED25519)
+|_ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIODBH7Wgp6xHhtscsZzHnrgNBefLriYH601FqYRUOVNU
+8080/tcp open  http    syn-ack ttl 63 Apache httpd 2.4.38 ((Debian))
+|_http-title: Site doesn't have a title (text/html; charset=UTF-8).
+| http-robots.txt: 2 disallowed entries 
+|_/vpn/ /.ftp_uploads/
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-server-header: Apache/2.4.38 (Debian)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Mon Dec 27 12:49:27 2021 -- 1 IP address (1 host up) scanned in 53.27 seconds
