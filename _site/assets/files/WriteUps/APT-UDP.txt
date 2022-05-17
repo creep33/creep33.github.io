@@ -1,8 +1,0 @@
-# Nmap 7.92 scan initiated Sat Dec 11 16:24:12 2021 as: nmap -sU --open -T5 -v -n --top-ports 100 -Pn -oN UDPScan.txt 10.10.10.213
-Nmap scan report for 10.10.10.213
-Host is up.
-All 100 scanned ports on 10.10.10.213 are in ignored states.
-Not shown: 100 open|filtered udp ports (no-response)
-
-Read data files from: /usr/bin/../share/nmap
-# Nmap done at Sat Dec 11 16:24:18 2021 -- 1 IP address (1 host up) scanned in 6.12 seconds
