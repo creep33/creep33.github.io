@@ -27,7 +27,7 @@ Delivery is a quick and fun easy box where we have to create a MatterMost accoun
 
 ```
 Nmap scan report for 10.129.148.141
-Host is up (0.018s latency).
+Host is up (0.017s latency).
 Not shown: 65532 closed ports
 PORT     STATE SERVICE VERSION
 22/tcp   open  ssh     OpenSSH 7.9p1 Debian 10+deb10u2 (protocol 2.0)
