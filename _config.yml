@@ -16,11 +16,11 @@ minimal_mistakes_skin    : "haxor" # "air", "aqua", "contrast", "dark", "dirt", 
 
 # Site Settings
 locale                   : "en-US"
-title                    : "creep33.github.io"
+title                    : "creep33.com"
 title_separator          : "-"
 name                     : "creep33"
 description              : "Posts about security, CTFs and networking"
-url                      : "https://creep33.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : "https://creep33.com" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : "creep33/creep33.github.io" # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 logo                     : "/assets/images/masthead.png"
