@@ -76,5 +76,10 @@ We can input a file which must be the output of the `find / \-perm -4000 2>/dev/
 ```bash
 gtfobins -f file
 ```
+Or if you don't want to create the file you can just:
+
+```bash
+find / \-perm -4000 2>/dev/null | gtfobins -f -
+```
 
 And it will search all the binaries in GTFOBins Website.
