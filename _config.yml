@@ -104,12 +104,12 @@ author:
   name             : "creep33"
   avatar           : "/assets/images/avatar.png"
   bio              : "eJPT | Cibersecurity and<br>Ethical Hacking Student"
-  location         : "Spain"
+  location         : #"Spain"
   email            : 
   uri              :
   home             : # null (default), "absolute or relative url to link to author home"
   bitbucket        :
-  codepen          :
+  codepen          : 
   dribbble         :
   flickr           :
   facebook         :
