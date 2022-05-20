@@ -5,7 +5,7 @@ excerpt: "Terminal explorer tool to search on GTFOBins website, this website is 
 date: 2022-05-19
 classes: wide
 header:
-  teaser: /assets/images/Tools/bash-icon.png
+  teaser: /assets/images/Tools/gtfobins/icon.jpg
   teaser_home_page: true
   icon: /assets/images/tool.png
 categories:
