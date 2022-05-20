@@ -60,12 +60,12 @@ It will display the exact text as if you have searched it in the official GTFOBi
 For the example we will use **awk** binary.
 
 <div style="text-align:center"><img src="/assets/images/Tools/gtfobins/gtfobins-explorer-nooption.png" /></div>
-
+<br>
 
 For some reason we are not focusing on why, we will display the "File Read" option.
 
 <div style="text-align:center"><img src="/assets/images/Tools/gtfobins/gtfobins-explorer-yesoption.png" /></div>
-
+<br>
 
 And now if we compare it with the official page we will see it is the same.
 
