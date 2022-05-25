@@ -15,7 +15,7 @@ remote_theme             : "mmistakes/minimal-mistakes@4.15.1"
 minimal_mistakes_skin    : "haxor" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
 # Site Settings
-locale                   : "en-US"
+locale                   : "es-ES"
 title                    : "creep33.com"
 title_separator          : "-"
 name                     : "creep33"
@@ -95,7 +95,7 @@ social:
 analytics:
   provider               : "google" # false (default), "google", "google-universal", "custom"
   google:
-    tracking_id          : "UA-145129883-1"
+    tracking_id          : "G-ETCJBEBDRD"
     anonymize_ip         : false # (default)
 
 
@@ -120,7 +120,7 @@ author:
   keybase          : #"snowscan"
   instagram        :
   lastfm           :
-  linkedin         : mario-mansilla-fernández-2b7086231
+  linkedin         : mario-mansilla-fernández
   pinterest        :
   soundcloud       :
   stackoverflow    : # "123456/username" (the last part of your profile url, e.g. https://stackoverflow.com/users/123456/username)
@@ -210,6 +210,7 @@ plugins:
   - jekyll-feed
   - jemoji
   - jekyll-include-cache
+  - jekyll-seo-tag
 
 # mimic GitHub Pages with --safe
 whitelist:
