@@ -16,7 +16,7 @@ minimal_mistakes_skin    : "haxor" # "air", "aqua", "contrast", "dark", "dirt", 
 
 # Site Settings
 locale                   : "es-ES"
-title                    : "creep33.com"
+title                    : "creep33 Website"
 title_separator          : "-"
 name                     : "creep33"
 description              : "Posts about security, CTFs and networking"
