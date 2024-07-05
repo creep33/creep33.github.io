@@ -114,13 +114,13 @@ author:
   flickr           :
   facebook         :
   foursquare       :
-  github           : "creep33"
+  github           : #"creep33"
   gitlab           :
   google_plus      :
   keybase          : #"snowscan"
   instagram        :
   lastfm           :
-  linkedin         : mario-mansilla-fernández
+  linkedin         : #mario-mansilla-fernández
   pinterest        :
   soundcloud       :
   stackoverflow    : # "123456/username" (the last part of your profile url, e.g. https://stackoverflow.com/users/123456/username)
